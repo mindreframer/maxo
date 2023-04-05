@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# set -e true
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+
+function test_maxo {
+  cd $SCRIPT_DIR/../
+  mix test
+  res1=$?
+}
+
+function test_maxo_new {
+  cd $SCRIPT_DIR/../installer
+  mix test
+  res2=$?
+}
+
+test_maxo
+test_maxo_new
+
+# echo "res1 = $res1"
+# echo "res2 = $res2"
+
+if [[ "$res1" == 0 ]] && [[ "$res2" == 0 ]]; then
+  echo "ok"
+  exit 0
+else
+  echo "fail"
+  exit 1
+fi

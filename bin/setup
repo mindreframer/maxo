@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+function setup_maxo {
+  cd $SCRIPT_DIR/../
+  mix deps.get
+}
+
+function setup_maxo_new {
+  cd $SCRIPT_DIR/../installer
+  mix deps.get
+}
+
+setup_maxo
+setup_maxo_new
