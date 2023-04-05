@@ -13,7 +13,6 @@ defmodule MaxoNew.MixProject do
       elixir: "~> 1.14",
       # reuse build artefacts
       build_path: "../_build",
-      config_path: "../config/config.exs",
       deps_path: "../deps",
       lockfile: "../mix.lock",
       # colocated tests
