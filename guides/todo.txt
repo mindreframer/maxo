@@ -1,0 +1,6 @@
+OK, lets start with the basic things...
+
+- Bootrapper
+    - The installer package, that bootstraps projects
+    - similar to Phoenix
+- Start with libraries setup

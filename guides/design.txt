@@ -1,0 +1,25 @@
+Maxo
+	Scaffold generator for libraries
+		GitHub setup
+		Badges
+		Code coverage
+		Download stats
+		Custom default packages
+			mneme
+			test_iex
+			ex_check
+		Changelog
+		__Useful__ readme
+	Scaffold generator for apps
+		Can spit out complex applications with many _features_
+		Features configuration can be “layered” up-on each other
+		The full config is stored in a .maxo.exs file
+			Similar to mix.exs
+		Flow
+			$ mkdir app
+			$ mix maxo.init
+			$ … edit .maxo.exs file
+			# will show the expanded configuration files with all the defaults and stuff
+			$ mix maxo.show
+			# dry-run
+			$ mix max.gen —dry
