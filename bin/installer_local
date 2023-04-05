@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cd installer
+make local
