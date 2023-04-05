@@ -11,6 +11,12 @@ defmodule MaxoNew.MixProject do
       app: :maxo_new,
       version: "0.1.0",
       elixir: "~> 1.14",
+      # reuse build artefacts
+      build_path: "../_build",
+      config_path: "../config/config.exs",
+      deps_path: "../deps",
+      lockfile: "../mix.lock",
+      # colocated tests
       test_paths: ["test", "lib"],
       test_pattern: "*_test.exs",
       start_permanent: Mix.env() == :prod,

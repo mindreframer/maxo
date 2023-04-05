@@ -1,11 +1,12 @@
-# Maxo
+# Maxo - Ultimate App Codegen
 
-**TODO: Add description**
+[![Hex.pm](https://img.shields.io/hexpm/v/maxo.svg)](https://hex.pm/packages/maxo)
+[![Docs](https://img.shields.io/badge/hexdocs-docs-8e7ce6.svg)](https://hexdocs.pm/maxo)
+[![CI](https://github.com/mindreframer/maxo/actions/workflows/ci.yml/badge.svg)](https://github.com/mindreframer/maxo/actions/workflows/ci.yml)
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `maxo` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `maxo` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -15,7 +16,4 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/maxo>.
-
+The docs can be found at <https://hexdocs.pm/maxo>.
