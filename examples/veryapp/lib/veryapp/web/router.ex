@@ -2,22 +2,25 @@ defmodule Veryapp.Web.Router do
   use Veryapp.Web, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, {Veryapp.Web.Layouts, :root}
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_live_flash)
+    plug(:put_root_layout, {Veryapp.Web.Layouts, :root})
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   scope "/" do
-    pipe_through :browser
+    pipe_through(:browser)
 
-    get "/", Veryapp.Page.PageController, :home
+    get("/", Veryapp.Page.PageController, :home)
+    use Veryapp.Web.ProductLiveRouting
+    use Veryapp.Web.CategoryLiveRouting
+    use Veryapp.Web.StickLiveRouting
   end
 
   # Other scopes may use custom stacks.
@@ -35,10 +38,10 @@ defmodule Veryapp.Web.Router do
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through :browser
+      pipe_through(:browser)
 
-      live_dashboard "/dashboard", metrics: Veryapp.Web.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+      live_dashboard("/dashboard", metrics: Veryapp.Web.Telemetry)
+      forward("/mailbox", Plug.Swoosh.MailboxPreview)
     end
   end
 end

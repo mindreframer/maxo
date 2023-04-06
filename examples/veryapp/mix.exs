@@ -52,8 +52,9 @@ defmodule Veryapp.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:maxo, path: "../../"}, 
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
+      {:maxo, path: "../../"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:test_iex, github: "mindreframer/test_iex", only: [:test, :dev]}
     ]
   end
 
