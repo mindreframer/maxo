@@ -229,7 +229,7 @@ defmodule Mix.Tasks.Maxo.Gen.Live do
             pipe_through :browser
             ...
 
-      #{for line <- live_route_instructions(schema, prefix), do: "      #{line}"}
+            use #{inspect(schema.live_routing_module)}
           end
       """)
     else
@@ -237,7 +237,7 @@ defmodule Mix.Tasks.Maxo.Gen.Live do
 
       Add the live routes to your browser scope in #{Mix.Maxo.web_path(ctx_app)}/router.ex:
 
-      #{for line <- live_route_instructions(schema, prefix), do: "    #{line}"}
+      use #{inspect(schema.live_routing_module)}
       """)
     end
 
@@ -254,17 +254,6 @@ defmodule Mix.Tasks.Maxo.Gen.Live do
       in this generator.
       """)
     end
-  end
-
-  defp live_route_instructions(schema, prefix) do
-    [
-      ~s|alias #{inspect(prefix)}.#{inspect(schema.alias)}Live\n|,
-      ~s|live "/#{schema.plural}", #{inspect(schema.alias)}Live.Index, :index\n|,
-      ~s|live "/#{schema.plural}/new", #{inspect(schema.alias)}Live.Index, :new\n|,
-      ~s|live "/#{schema.plural}/:id/edit", #{inspect(schema.alias)}Live.Index, :edit\n\n|,
-      ~s|live "/#{schema.plural}/:id", #{inspect(schema.alias)}Live.Show, :show\n|,
-      ~s|live "/#{schema.plural}/:id/show/edit", #{inspect(schema.alias)}Live.Show, :edit|
-    ]
   end
 
   @doc false
