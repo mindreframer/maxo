@@ -1,12 +1,12 @@
-defmodule Veryapp.Core.ErrorHTML do
-  use Veryapp.Core, :html
+defmodule Veryapp.Web.ErrorHTML do
+  use Veryapp.Web, :html
 
   # If you want to customize your error pages,
   # uncomment the embed_templates/1 call below
   # and add pages to the error directory:
   #
-  #   * lib/veryapp/core/controllers/error_html/404.html.heex
-  #   * lib/veryapp/core/controllers/error_html/500.html.heex
+  #   * lib/veryapp/web/controllers/error_html/404.html.heex
+  #   * lib/veryapp/web/controllers/error_html/500.html.heex
   #
   # embed_templates "error_html/*"
 

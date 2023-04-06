@@ -1,5 +1,5 @@
 defmodule Veryapp.Page.PageControllerTest do
-  use Veryapp.Core.ConnCase
+  use Veryapp.Web.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")

@@ -1,5 +1,5 @@
-defmodule Veryapp.Core.Layouts do
-  use Veryapp.Core, :html
+defmodule Veryapp.Web.Layouts do
+  use Veryapp.Web, :html
 
   embed_templates "layouts/*"
 end

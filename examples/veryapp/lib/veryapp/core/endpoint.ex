@@ -1,4 +1,4 @@
-defmodule Veryapp.Core.Endpoint do
+defmodule Veryapp.Web.Endpoint do
   use Phoenix.Endpoint, otp_app: :veryapp
 
   # The session will be stored in the cookie and signed,
@@ -7,7 +7,7 @@ defmodule Veryapp.Core.Endpoint do
   @session_options [
     store: :cookie,
     key: "_veryapp_key",
-    signing_salt: "5+g4p9of",
+    signing_salt: "5FBYvUV/",
     same_site: "Lax"
   ]
 
@@ -21,7 +21,7 @@ defmodule Veryapp.Core.Endpoint do
     at: "/",
     from: :veryapp,
     gzip: false,
-    only: Veryapp.Core.static_paths()
+    only: Veryapp.Web.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
@@ -47,5 +47,5 @@ defmodule Veryapp.Core.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug Veryapp.Core.Router
+  plug Veryapp.Web.Router
 end

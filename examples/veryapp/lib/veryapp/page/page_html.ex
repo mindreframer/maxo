@@ -1,5 +1,5 @@
 defmodule Veryapp.Page.PageHTML do
-  use Veryapp.Core, :html
+  use Veryapp.Web, :html
 
   embed_templates "page_html/*"
 end

@@ -16,14 +16,14 @@ config :veryapp, Veryapp.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with esbuild to bundle .js and .css sources.
-config :veryapp, Veryapp.Core.Endpoint,
+config :veryapp, Veryapp.Web.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "FeQ5bHdJTjHz5mf++uRyZxuli2ePUwLv8rKjAkFPD+KvyLMcBOgGsvbwN9r8vN/5",
+  secret_key_base: "4Q9lSjXEip7dbWkvWKgk8vzM14iC1XIRX2x5Y3802HPIuiTQ45EC/8hfYZemYJjC",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
@@ -53,7 +53,7 @@ config :veryapp, Veryapp.Core.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :veryapp, Veryapp.Core.Endpoint,
+config :veryapp, Veryapp.Web.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",

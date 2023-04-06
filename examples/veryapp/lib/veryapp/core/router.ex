@@ -1,11 +1,11 @@
-defmodule Veryapp.Core.Router do
-  use Veryapp.Core, :router
+defmodule Veryapp.Web.Router do
+  use Veryapp.Web, :router
 
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {Veryapp.Core.Layouts, :root}
+    plug :put_root_layout, {Veryapp.Web.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -21,7 +21,7 @@ defmodule Veryapp.Core.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Veryapp.Core do
+  # scope "/api", Veryapp.Web do
   #   pipe_through :api
   # end
 
@@ -37,7 +37,7 @@ defmodule Veryapp.Core.Router do
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: Veryapp.Core.Telemetry
+      live_dashboard "/dashboard", metrics: Veryapp.Web.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end

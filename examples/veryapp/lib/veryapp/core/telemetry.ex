@@ -1,4 +1,4 @@
-defmodule Veryapp.Core.Telemetry do
+defmodule Veryapp.Web.Telemetry do
   use Supervisor
   import Telemetry.Metrics
 
@@ -86,7 +86,7 @@ defmodule Veryapp.Core.Telemetry do
     [
       # A module, function and arguments to be invoked periodically.
       # This function must call :telemetry.execute/3 and a metric must be added above.
-      # {Veryapp.Core, :count_users, []}
+      # {Veryapp.Web, :count_users, []}
     ]
   end
 end

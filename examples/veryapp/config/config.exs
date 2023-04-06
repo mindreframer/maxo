@@ -11,14 +11,14 @@ config :veryapp,
   ecto_repos: [Veryapp.Repo]
 
 # Configures the endpoint
-config :veryapp, Veryapp.Core.Endpoint,
+config :veryapp, Veryapp.Web.Endpoint,
   url: [host: "localhost"],
   render_errors: [
-    formats: [html: Veryapp.Core.ErrorHTML, json: Veryapp.Core.ErrorJSON],
+    formats: [html: Veryapp.Web.ErrorHTML, json: Veryapp.Web.ErrorJSON],
     layout: false
   ],
   pubsub_server: Veryapp.PubSub,
-  live_view: [signing_salt: "RvkAMd1H"]
+  live_view: [signing_salt: "ZSxEmcgp"]
 
 # Configures the mailer
 #

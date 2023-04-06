@@ -1,12 +1,12 @@
-defmodule Veryapp.Core do
+defmodule Veryapp.Web do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, components, channels, and so on.
 
   This can be used in your application as:
 
-      use Veryapp.Core, :controller
-      use Veryapp.Core, :html
+      use Veryapp.Web, :controller
+      use Veryapp.Web, :html
 
   The definitions below will be executed for every controller,
   component, etc, so keep them short and clean, focused
@@ -40,10 +40,10 @@ defmodule Veryapp.Core do
     quote do
       use Phoenix.Controller,
         formats: [:html, :json],
-        layouts: [html: Veryapp.Core.Layouts]
+        layouts: [html: Veryapp.Web.Layouts]
 
       import Plug.Conn
-      import Veryapp.Core.Gettext
+      import Veryapp.Web.Gettext
 
       unquote(verified_routes())
     end
@@ -52,7 +52,7 @@ defmodule Veryapp.Core do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {Veryapp.Core.Layouts, :app}
+        layout: {Veryapp.Web.Layouts, :app}
 
       unquote(html_helpers())
     end
@@ -84,8 +84,8 @@ defmodule Veryapp.Core do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      import Veryapp.Core.CoreComponents
-      import Veryapp.Core.Gettext
+      import Veryapp.Web.CoreComponents
+      import Veryapp.Web.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
@@ -98,9 +98,9 @@ defmodule Veryapp.Core do
   def verified_routes do
     quote do
       use Phoenix.VerifiedRoutes,
-        endpoint: Veryapp.Core.Endpoint,
-        router: Veryapp.Core.Router,
-        statics: Veryapp.Core.static_paths()
+        endpoint: Veryapp.Web.Endpoint,
+        router: Veryapp.Web.Router,
+        statics: Veryapp.Web.static_paths()
     end
   end
 

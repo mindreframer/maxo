@@ -15,9 +15,9 @@ config :veryapp, Veryapp.Repo,
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :veryapp, Veryapp.Core.Endpoint,
+config :veryapp, Veryapp.Web.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "bO4e5OxJFbc7QnBV+OukuCEL4OWA52qCMrx199ewJdF82zwYr5gWvTQb6AAnVyCI",
+  secret_key_base: "Hum6QSuY9lLnyYvXmUIoM1auaKIpr/SYr1joR6Hxlmkf8SWrfQbQSljK/nPHH9pv",
   server: false
 
 # In test we don't send emails.
