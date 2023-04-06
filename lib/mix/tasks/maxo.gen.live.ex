@@ -132,8 +132,8 @@ defmodule Mix.Tasks.Maxo.Gen.Live do
     []
   end
 
-  defp files_to_be_generated(ctx = %Context{schema: schema, context_app: context_app}) do
-    web_prefix = Mix.Maxo.web_path(context_app)
+  defp files_to_be_generated(ctx = %Context{schema: schema, context_app: _context_app}) do
+    # web_prefix = Mix.Maxo.web_path(context_app)
     # test_prefix = Mix.Maxo.web_test_path(context_app)
     web_path = to_string(schema.web_path)
     live_subdir = "#{schema.singular}_live"
