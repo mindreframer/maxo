@@ -7,12 +7,12 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
+      <CC.header>
         <%%= @title %>
         <:subtitle>Use this form to manage <%= schema.singular %> records in your database.</:subtitle>
-      </.header>
+      </CC.header>
 
-      <.simple_form
+      <CC.simple_form
         for={@form}
         id="<%= schema.singular %>-form"
         phx-target={@myself}
@@ -21,9 +21,9 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       >
 <%= Mix.Tasks.Maxo.Gen.Html.indent_inputs(inputs, 8) %>
         <:actions>
-          <.button phx-disable-with="Saving...">Save <%= schema.human_singular %></.button>
+          <CC.button phx-disable-with="Saving...">Save <%= schema.human_singular %></CC.button>
         </:actions>
-      </.simple_form>
+      </CC.simple_form>
     </div>
     """
   end
