@@ -10,7 +10,7 @@ defmodule <%= inspect schema.live_routing_module %> do
 
       live "/<%= url_prefix %>", <%= live_mod %>.Index, :index
       live "/<%= url_prefix %>/new", <%= live_mod %>.Index, :new
-      live "/<%= url_prefix %>/edit", <%= live_mod %>.Index, :edit
+      live "/<%= url_prefix %>/:id/edit", <%= live_mod %>.Index, :edit
 
       live "/<%= url_prefix %>/:id", <%= live_mod %>.Show, :show
       live "/<%= url_prefix %>/:id/show/edit", <%= live_mod %>.Show, :edit
