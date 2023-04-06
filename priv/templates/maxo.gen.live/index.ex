@@ -44,4 +44,9 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
     {:noreply, stream_delete(socket, :<%= schema.collection %>, <%= schema.singular %>)}
   end
+
+  @impl true
+  def render(assigns) do
+    <%= inspect Module.concat([context.web_module, schema.web_namespace, schema.alias]) %>Live.IndexHtml.render(assigns)
+  end
 end

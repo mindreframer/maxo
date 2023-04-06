@@ -143,12 +143,14 @@ defmodule Mix.Tasks.Maxo.Gen.Live do
 
     [
       {:eex, "show.ex", Path.join(web_live, "show.ex")},
+      {:eex, "show_html.ex", Path.join(web_live, "show_html.ex")},
       {:eex, "index.ex", Path.join(web_live, "index.ex")},
+      {:eex, "index_html.ex", Path.join(web_live, "index_html.ex")},
       {:eex, "form_component.ex", Path.join(web_live, "form_component.ex")},
-      {:eex, "index.html.heex", Path.join(web_live, "index.html.heex")},
-      {:eex, "show.html.heex", Path.join(web_live, "show.html.heex")},
       {:eex, "live_routing.ex", Path.join(web_live, "#{schema.singular}_live_routing.ex")},
       {:eex, "live_test.exs", Path.join(test_live, "#{schema.singular}_live_test.exs")}
+      # {:eex, "index.html.heex", Path.join(web_live, "index.html.heex")},
+      # {:eex, "show.html.heex", Path.join(web_live, "show.html.heex")},
       # {:new_eex, "core_components.ex",
       #  Path.join([web_prefix, "components", "core_components.ex"])}
     ]
