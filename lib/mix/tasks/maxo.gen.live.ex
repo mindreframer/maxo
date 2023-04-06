@@ -265,35 +265,35 @@ defmodule Mix.Tasks.Maxo.Gen.Live do
         nil
 
       {key, :integer} ->
-        ~s(<.input field={@form[#{inspect(key)}]} type="number" label="#{label(key)}" />)
+        ~s(<CC.input field={@form[#{inspect(key)}]} type="number" label="#{label(key)}" />)
 
       {key, :float} ->
-        ~s(<.input field={@form[#{inspect(key)}]} type="number" label="#{label(key)}" step="any" />)
+        ~s(<CC.input field={@form[#{inspect(key)}]} type="number" label="#{label(key)}" step="any" />)
 
       {key, :decimal} ->
-        ~s(<.input field={@form[#{inspect(key)}]} type="number" label="#{label(key)}" step="any" />)
+        ~s(<CC.input field={@form[#{inspect(key)}]} type="number" label="#{label(key)}" step="any" />)
 
       {key, :boolean} ->
-        ~s(<.input field={@form[#{inspect(key)}]} type="checkbox" label="#{label(key)}" />)
+        ~s(<CC.input field={@form[#{inspect(key)}]} type="checkbox" label="#{label(key)}" />)
 
       {key, :text} ->
-        ~s(<.input field={@form[#{inspect(key)}]} type="text" label="#{label(key)}" />)
+        ~s(<CC.input field={@form[#{inspect(key)}]} type="text" label="#{label(key)}" />)
 
       {key, :date} ->
-        ~s(<.input field={@form[#{inspect(key)}]} type="date" label="#{label(key)}" />)
+        ~s(<CC.input field={@form[#{inspect(key)}]} type="date" label="#{label(key)}" />)
 
       {key, :time} ->
-        ~s(<.input field={@form[#{inspect(key)}]} type="time" label="#{label(key)}" />)
+        ~s(<CC.input field={@form[#{inspect(key)}]} type="time" label="#{label(key)}" />)
 
       {key, :utc_datetime} ->
-        ~s(<.input field={@form[#{inspect(key)}]} type="datetime-local" label="#{label(key)}" />)
+        ~s(<CC.input field={@form[#{inspect(key)}]} type="datetime-local" label="#{label(key)}" />)
 
       {key, :naive_datetime} ->
-        ~s(<.input field={@form[#{inspect(key)}]} type="datetime-local" label="#{label(key)}" />)
+        ~s(<CC.input field={@form[#{inspect(key)}]} type="datetime-local" label="#{label(key)}" />)
 
       {key, {:array, _} = type} ->
         ~s"""
-        <.input
+        <CC.input
           field={@form[#{inspect(key)}]}
           type="select"
           multiple
@@ -304,7 +304,7 @@ defmodule Mix.Tasks.Maxo.Gen.Live do
 
       {key, {:enum, _}} ->
         ~s"""
-        <.input
+        <CC.input
           field={@form[#{inspect(key)}]}
           type="select"
           label="#{label(key)}"
@@ -314,7 +314,7 @@ defmodule Mix.Tasks.Maxo.Gen.Live do
         """
 
       {key, _} ->
-        ~s(<.input field={@form[#{inspect(key)}]} type="text" label="#{label(key)}" />)
+        ~s(<CC.input field={@form[#{inspect(key)}]} type="text" label="#{label(key)}" />)
     end)
   end
 

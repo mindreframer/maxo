@@ -5,7 +5,7 @@ defmodule Mix.Tasks.Maxo.Gen do
 
   @moduledoc """
   Lists all available Phoenix generators.
-  
+
   ## CRUD related generators
 
   The table below shows a summary of the contents created by the CRUD generators:

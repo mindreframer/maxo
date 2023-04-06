@@ -70,7 +70,6 @@ defmodule Mix.Maxo.Schema do
   end
 
   def new(schema_name, schema_plural, cli_attrs, opts) do
-
     ctx_app = opts[:context_app] || Mix.Maxo.context_app()
     otp_app = Mix.Maxo.otp_app()
     opts = Keyword.merge(Application.get_env(otp_app, :generators, []), opts)
