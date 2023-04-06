@@ -41,13 +41,13 @@ defmodule Mix.Maxo do
           Mix.Generator.create_file(target, File.read!(source))
 
         :eex ->
-          Mix.Generator.create_file(target, EEx.eval_file(source, binding, trim: true))
+          Mix.Generator.create_file(target, EEx.eval_file(source, binding))
 
         :new_eex ->
           if File.exists?(target) do
             :ok
           else
-            Mix.Generator.create_file(target, EEx.eval_file(source, binding, trim: true))
+            Mix.Generator.create_file(target, EEx.eval_file(source, binding))
           end
       end
     end
