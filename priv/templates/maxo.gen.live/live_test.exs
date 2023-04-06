@@ -32,11 +32,11 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       assert_patch(index_live, new_path())
 
       assert index_live
-             |> form("#<%= schema.singular %>-form", <%= schema.singular %>: @invalid_attrs)
+             |> fill_form(<%= schema.singular %>: @invalid_attrs)
              |> render_change() =~ "<%= Mix.Maxo.Schema.failed_render_change_message(schema) %>"
 
       assert index_live
-             |> form("#<%= schema.singular %>-form", <%= schema.singular %>: @create_attrs)
+             |> fill_form(<%= schema.singular %>: @create_attrs)
              |> render_submit()
 
       assert_patch(index_live, index_path())
@@ -55,11 +55,11 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       assert_patch(index_live, index_edit_path(<%= schema.singular %>))
 
       assert index_live
-             |> form("#<%= schema.singular %>-form", <%= schema.singular %>: @invalid_attrs)
+             |> fill_form(<%= schema.singular %>: @invalid_attrs)
              |> render_change() =~ "<%= Mix.Maxo.Schema.failed_render_change_message(schema) %>"
 
       assert index_live
-             |> form("#<%= schema.singular %>-form", <%= schema.singular %>: @update_attrs)
+             |> fill_form(<%= schema.singular %>: @update_attrs)
              |> render_submit()
 
       assert_patch(index_live, index_path())
@@ -96,11 +96,11 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
       assert_patch(show_live, show_edit_path(<%= schema.singular %>))
 
       assert show_live
-             |> form("#<%= schema.singular %>-form", <%= schema.singular %>: @invalid_attrs)
+             |> fill_form(<%= schema.singular %>: @invalid_attrs)
              |> render_change() =~ "<%= Mix.Maxo.Schema.failed_render_change_message(schema) %>"
 
       assert show_live
-             |> form("#<%= schema.singular %>-form", <%= schema.singular %>: @update_attrs)
+             |> fill_form(<%= schema.singular %>: @update_attrs)
              |> render_submit()
 
       assert_patch(show_live, show_path(<%= schema.singular %>))
@@ -116,5 +116,8 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     defp index_edit_path(<%= schema.singular %>), do: ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}/edit"
     defp show_path(<%= schema.singular %>), do: ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}"
     defp show_edit_path(<%= schema.singular %>), do: ~p"<%= schema.route_prefix %>/#{<%= schema.singular %>}/show/edit"
+
+    # Form utils
+    defp fill_form(live, data), do: form(live, "#<%= schema.singular %>-form", data)
   end
 end
