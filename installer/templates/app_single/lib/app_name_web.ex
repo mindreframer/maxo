@@ -84,6 +84,8 @@ defmodule <%= @web_namespace %> do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
+      alias <%= @web_namespace %>.CoreComponents, as: CC
+      alias Phoenix.Component, as: PhxC
       import <%= @web_namespace %>.CoreComponents<%= if @gettext do %>
       import <%= @web_namespace %>.Gettext<% end %>
 
