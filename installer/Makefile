@@ -1,2 +1,2 @@
-local: 
-	MIX_ENV=prod mix do archive.build, archive.install
+local:
+	MIX_ENV=prod mix do compile, archive.build, archive.install
