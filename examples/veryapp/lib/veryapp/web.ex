@@ -84,6 +84,8 @@ defmodule Veryapp.Web do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
+      alias Veryapp.Web.CoreComponents, as: CC
+      alias Phoenix.Component, as: PhxC
       import Veryapp.Web.CoreComponents
       import Veryapp.Web.Gettext
 
