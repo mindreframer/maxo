@@ -26,7 +26,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     test "saves new <%= schema.singular %>", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, index_path())
 
-      assert index_live |> element("a", "New <%= schema.human_singular %>") |> render_click() =~
+      assert index_live |> link_index_new() |> render_click() =~
                "New <%= schema.human_singular %>"
 
       assert_patch(index_live, new_path())
@@ -49,7 +49,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     test "updates <%= schema.singular %> in listing", %{conn: conn, <%= schema.singular %>: <%= schema.singular %>} do
       {:ok, index_live, _html} = live(conn, index_path())
 
-      assert index_live |> element("#<%= schema.plural %>-#{<%= schema.singular %>.id} a", "Edit") |> render_click() =~
+      assert index_live |> link_index_edit(<%= schema.singular %>) |> render_click() =~
                "Edit <%= schema.human_singular %>"
 
       assert_patch(index_live, index_edit_path(<%= schema.singular %>))
@@ -72,7 +72,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     test "deletes <%= schema.singular %> in listing", %{conn: conn, <%= schema.singular %>: <%= schema.singular %>} do
       {:ok, index_live, _html} = live(conn, index_path())
 
-      assert index_live |> element("#<%= schema.plural %>-#{<%= schema.singular %>.id} a", "Delete") |> render_click()
+      assert index_live |> link_index_delete(<%= schema.singular %>) |> render_click()
       refute has_element?(index_live, "#<%= schema.plural %>-#{<%= schema.singular %>.id}")
     end
   end
@@ -90,7 +90,7 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     test "updates <%= schema.singular %> within modal", %{conn: conn, <%= schema.singular %>: <%= schema.singular %>} do
       {:ok, show_live, _html} = live(conn, show_path(<%= schema.singular %>))
 
-      assert show_live |> element("a", "Edit") |> render_click() =~
+      assert show_live |> link_modal_edit() |> render_click() =~
                "Edit <%= schema.human_singular %>"
 
       assert_patch(show_live, show_edit_path(<%= schema.singular %>))
@@ -119,5 +119,14 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
 
     # Form utils
     defp fill_form(live, data), do: form(live, "#<%= schema.singular %>-form", data)
+
+    # Link utils
+    defp link_index_new(live), do: element(live, "a", "New <%= schema.human_singular %>")
+    defp link_index_edit(live, <%= schema.singular %>), do: element(live, "#<%= schema.plural %>-#{<%= schema.singular %>.id} a", "Edit")
+
+    defp link_index_delete(live, <%= schema.singular %>),
+      do: element(live, "#<%= schema.plural %>-#{<%= schema.singular %>.id} a", "Delete")
+
+    defp link_modal_edit(live), do: element(live, "a", "Edit")
   end
 end
