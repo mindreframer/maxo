@@ -7,6 +7,7 @@ defmodule Mix.Tasks.Maxo.AppTest do
   describe "unit_test_project" do
     test "just path" do
       res = MaxoApp.unit_test_project("my_app")
+
       # IO.inspect(res, limit: :infinity)
 
       auto_assert(
@@ -67,10 +68,10 @@ defmodule Mix.Tasks.Maxo.AppTest do
             app_module: "MyApp",
             root_app_name: "my_app",
             root_app_module: "MyApp",
-            lib_web_name: "my_app/core",
+            lib_web_name: "my_app/web",
             web_app_name: "my_app",
-            endpoint_module: "MyApp.Core.Endpoint",
-            web_namespace: "MyApp.Core",
+            endpoint_module: "MyApp.Web.Endpoint",
+            web_namespace: "MyApp.Web",
             phoenix_dep: "{:phoenix, \"~> 1.7.2\"}",
             phoenix_dep_umbrella_root: "{:phoenix, \"~> 1.7.2\"}",
             phoenix_js_path: "phoenix",
@@ -93,13 +94,13 @@ defmodule Mix.Tasks.Maxo.AppTest do
             namespaced?: false,
             dev: false
           ],
-          lib_web_name: "my_app/core",
+          lib_web_name: "my_app/web",
           opts: [],
           project_path: "my_app",
           root_app: "my_app",
           root_mod: MyApp,
           web_app: "my_app",
-          web_namespace: MyApp.Core,
+          web_namespace: MyApp.Web,
           web_path: "my_app"
         } <- remove_instable_values(res)
       )
@@ -167,10 +168,10 @@ defmodule Mix.Tasks.Maxo.AppTest do
             app_module: "OtherApp",
             root_app_name: "other_app",
             root_app_module: "OtherApp",
-            lib_web_name: "other_app/core",
+            lib_web_name: "other_app/web",
             web_app_name: "other_app",
-            endpoint_module: "OtherApp.Core.Endpoint",
-            web_namespace: "OtherApp.Core",
+            endpoint_module: "OtherApp.Web.Endpoint",
+            web_namespace: "OtherApp.Web",
             phoenix_dep: "{:phoenix, \"~> 1.7.2\"}",
             phoenix_dep_umbrella_root: "{:phoenix, \"~> 1.7.2\"}",
             phoenix_js_path: "phoenix",
@@ -193,13 +194,13 @@ defmodule Mix.Tasks.Maxo.AppTest do
             namespaced?: false,
             dev: false
           ],
-          lib_web_name: "other_app/core",
+          lib_web_name: "other_app/web",
           opts: [app: "other_app"],
           project_path: "my_app",
           root_app: "other_app",
           root_mod: OtherApp,
           web_app: "other_app",
-          web_namespace: OtherApp.Core,
+          web_namespace: OtherApp.Web,
           web_path: "my_app"
         } <- remove_instable_values(res)
       )
@@ -264,10 +265,10 @@ defmodule Mix.Tasks.Maxo.AppTest do
             app_module: "BIGAPP",
             root_app_name: "BIGAPP",
             root_app_module: "BIGAPP",
-            lib_web_name: "BIGAPP/core",
+            lib_web_name: "BIGAPP/web",
             web_app_name: "BIGAPP",
-            endpoint_module: "BIGAPP.Core.Endpoint",
-            web_namespace: "BIGAPP.Core",
+            endpoint_module: "BIGAPP.Web.Endpoint",
+            web_namespace: "BIGAPP.Web",
             phoenix_dep: "{:phoenix, \"~> 1.7.2\"}",
             phoenix_dep_umbrella_root: "{:phoenix, \"~> 1.7.2\"}",
             phoenix_js_path: "phoenix",
@@ -290,13 +291,13 @@ defmodule Mix.Tasks.Maxo.AppTest do
             namespaced?: false,
             dev: false
           ],
-          lib_web_name: "BIGAPP/core",
+          lib_web_name: "BIGAPP/web",
           opts: [app: "BIGAPP"],
           project_path: "my_app",
           root_app: "BIGAPP",
           root_mod: BIGAPP,
           web_app: "BIGAPP",
-          web_namespace: BIGAPP.Core,
+          web_namespace: BIGAPP.Web,
           web_path: "my_app"
         } <- remove_instable_values(res)
       )
@@ -332,22 +333,22 @@ defmodule Mix.Tasks.Maxo.AppTest do
 
         auto_assert(
           [
-            "/my_app/lib/my_app/core/router.ex",
-            "/my_app/lib/my_app/core/endpoint.ex",
-            "/my_app/lib/my_app/core/components",
-            "/my_app/lib/my_app/core/controllers/error_html.ex",
-            "/my_app/lib/my_app/core/controllers",
-            "/my_app/lib/my_app/core/components/layouts",
-            "/my_app/lib/my_app/core/controllers/error_json_test.exs",
-            "/my_app/lib/my_app/core/components/layouts.ex",
-            "/my_app/lib/my_app/core/controllers/error_html_test.exs",
-            "/my_app/lib/my_app/core/telemetry.ex",
-            "/my_app/lib/my_app/core/components/layouts/app.html.heex",
-            "/my_app/lib/my_app/core/controllers/error_json.ex",
-            "/my_app/lib/my_app/core/components/core_components.ex",
-            "/my_app/lib/my_app/core/components/layouts/root.html.heex",
-            "/my_app/lib/my_app/core/gettext.ex"
-          ] <- Virtfs.tree!(res.fs, "/my_app/lib/my_app/core")
+            "/my_app/lib/my_app/web/components/core_components.ex",
+            "/my_app/lib/my_app/web/router.ex",
+            "/my_app/lib/my_app/web/controllers/error_html.ex",
+            "/my_app/lib/my_app/web/components/layouts.ex",
+            "/my_app/lib/my_app/web/controllers/error_json_test.exs",
+            "/my_app/lib/my_app/web/controllers/error_json.ex",
+            "/my_app/lib/my_app/web/controllers",
+            "/my_app/lib/my_app/web/components/layouts",
+            "/my_app/lib/my_app/web/components/layouts/app.html.heex",
+            "/my_app/lib/my_app/web/components",
+            "/my_app/lib/my_app/web/components/layouts/root.html.heex",
+            "/my_app/lib/my_app/web/controllers/error_html_test.exs",
+            "/my_app/lib/my_app/web/gettext.ex",
+            "/my_app/lib/my_app/web/telemetry.ex",
+            "/my_app/lib/my_app/web/endpoint.ex"
+          ] <- Virtfs.tree!(res.fs, "/my_app/lib/my_app/web")
         )
       end)
 

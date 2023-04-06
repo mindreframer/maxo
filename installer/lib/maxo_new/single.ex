@@ -12,10 +12,10 @@ defmodule MaxoNew.Single do
      "app_single/config/test.exs": "config/test.exs",
      "app_single/lib/app_name/application.ex": "lib/:app/application.ex",
      "app_single/lib/app_name.ex": "lib/:app.ex",
-     "app_web/controllers/error_json.ex": "lib/:app/core/controllers/error_json.ex",
-     "app_web/endpoint.ex": "lib/:app/core/endpoint.ex",
-     "app_web/router.ex": "lib/:app/core/router.ex",
-     "app_web/telemetry.ex": "lib/:app/core/telemetry.ex",
+     "app_web/controllers/error_json.ex": "lib/:app/web/controllers/error_json.ex",
+     "app_web/endpoint.ex": "lib/:app/web/endpoint.ex",
+     "app_web/router.ex": "lib/:app/web/router.ex",
+     "app_web/telemetry.ex": "lib/:app/web/telemetry.ex",
      "app_single/lib/app_name_web.ex": "lib/:lib_web_name.ex",
      "app_single/mix.exs": "mix.exs",
      "app_single/README.md": "README.md",
@@ -24,29 +24,28 @@ defmodule MaxoNew.Single do
      "app_test/support/conn_case.ex": "test/support/conn_case.ex",
      "app_single/test/test_helper.exs": "test/test_helper.exs",
      "app_single/lib/test_helper.exs": "lib/test_helper.exs",
-     "app_test/controllers/error_json_test.exs": "lib/:app/core/controllers/error_json_test.exs"}
+     "app_test/controllers/error_json_test.exs": "lib/:app/web/controllers/error_json_test.exs"}
   ])
 
   template(:gettext, [
     {:eex, :project,
-     "app_gettext/gettext.ex": "lib/:app/core/gettext.ex",
+     "app_gettext/gettext.ex": "lib/:app/web/gettext.ex",
      "app_gettext/en/LC_MESSAGES/errors.po": "priv/gettext/en/LC_MESSAGES/errors.po",
      "app_gettext/errors.pot": "priv/gettext/errors.pot"}
   ])
 
   template(:html, [
     {:eex, :project,
-     "app_web/controllers/error_html.ex": "lib/:app/core/controllers/error_html.ex",
-     "app_test/controllers/error_html_test.exs": "lib/:app/core/controllers/error_html_test.exs",
-     "app_web/components/core_components.ex": "lib/:app/core/components/core_components.ex",
+     "app_web/controllers/error_html.ex": "lib/:app/web/controllers/error_html.ex",
+     "app_test/controllers/error_html_test.exs": "lib/:app/web/controllers/error_html_test.exs",
+     "app_web/components/core_components.ex": "lib/:app/web/components/core_components.ex",
      "app_web/page/page_controller.ex": "lib/:app/page/page_controller.ex",
      "app_web/page/page_html.ex": "lib/:app/page/page_html.ex",
      "app_web/page/page_html/home.html.heex": "lib/:app/page/page_html/home.html.heex",
      "app_web/page/page_controller_test.exs": "lib/:app/page/page_controller_test.exs",
-     "app_web/components/layouts/root.html.heex":
-       "lib/:app/core/components/layouts/root.html.heex",
-     "app_web/components/layouts/app.html.heex": "lib/:app/core/components/layouts/app.html.heex",
-     "app_web/components/layouts.ex": "lib/:app/core/components/layouts.ex"},
+     "app_web/components/layouts/root.html.heex": "lib/:app/web/components/layouts/root.html.heex",
+     "app_web/components/layouts/app.html.heex": "lib/:app/web/components/layouts/app.html.heex",
+     "app_web/components/layouts.ex": "lib/:app/web/components/layouts.ex"},
     {:eex, :web, "app_assets/logo.svg": "priv/static/images/logo.svg"}
   ])
 
@@ -117,8 +116,8 @@ defmodule MaxoNew.Single do
     %Project{
       project
       | web_app: app,
-        lib_web_name: "#{app}/core",
-        web_namespace: Module.concat(["#{project.root_mod}.Core"]),
+        lib_web_name: "#{app}/web",
+        web_namespace: Module.concat(["#{project.root_mod}.Web"]),
         web_path: project.project_path
     }
   end

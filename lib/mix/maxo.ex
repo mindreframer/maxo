@@ -205,7 +205,7 @@ defmodule Mix.Maxo do
     this_app = otp_app()
 
     if ctx_app == this_app do
-      Path.join(["lib", "#{this_app}_web", rel_path])
+      Path.join(["lib", "#{this_app}/web", rel_path])
     else
       Path.join(["lib", to_string(this_app), rel_path])
     end

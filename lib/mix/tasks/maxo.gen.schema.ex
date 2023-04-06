@@ -193,8 +193,8 @@ defmodule Mix.Tasks.Maxo.Gen.Schema do
       migration_path =
         Mix.Maxo.context_app_path(
           ctx_app,
-          # "priv/repo/migrations/#{timestamp()}_create_#{schema.table}.exs"
-          "lib/userjazz/0.local_migrations/#{timestamp()}_create_#{schema.table}.ex"
+          "priv/repo/migrations/#{timestamp()}_create_#{schema.table}.exs"
+          # "lib/userjazz/0.local_migrations/#{timestamp()}_create_#{schema.table}.ex"
         )
 
       Mix.Maxo.copy_from(paths, "priv/templates/maxo.gen.schema", binding, [
