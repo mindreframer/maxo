@@ -172,8 +172,7 @@ defmodule Mix.Tasks.Maxo.Gen.Live do
 
   defp maybe_inject_imports(%Context{context_app: ctx_app} = context) do
     web_prefix = Mix.Maxo.web_path(ctx_app)
-    [lib_prefix, web_dir] = Path.split(web_prefix)
-    file_path = Path.join(lib_prefix, "#{web_dir}.ex")
+    file_path = "#{web_prefix}.ex"
     file = File.read!(file_path)
     inject = "import #{inspect(context.web_module)}.CoreComponents"
 
