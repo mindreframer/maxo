@@ -7,7 +7,7 @@ defmodule Veryapp.Web.Endpoint do
   @session_options [
     store: :cookie,
     key: "_veryapp_key",
-    signing_salt: "5FBYvUV/",
+    signing_salt: "pNL77nz9",
     same_site: "Lax"
   ]
 
