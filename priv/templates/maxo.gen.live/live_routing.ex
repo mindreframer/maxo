@@ -1,4 +1,5 @@
 defmodule <%= inspect schema.live_routing_module %> do
+  @moduledoc false
   <% 
     url_prefix = schema.plural 
     live_mod = "#{inspect(schema.alias)}Live"

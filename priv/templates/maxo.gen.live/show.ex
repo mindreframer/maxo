@@ -21,7 +21,6 @@ defmodule <%= inspect context.web_module %>.<%= inspect Module.concat(schema.web
     <%= inspect Module.concat([context.web_module, schema.web_namespace, schema.alias]) %>Live.ShowHtml.render(assigns)
   end
 
-
   defp page_title(:show), do: "Show <%= schema.human_singular %>"
   defp page_title(:edit), do: "Edit <%= schema.human_singular %>"
 end
