@@ -12,9 +12,12 @@ defmodule <%= @web_namespace %>.CoreComponents do
   See the [Tailwind CSS documentation](https://tailwindcss.com) to learn
   how to customize them or feel free to swap in another framework altogether.
 
+  Icons are provided by [heroicons](https://heroicons.com). See `icon/1` for usage.
   """
   use Phoenix.Component
 
+  alias __MODULE__, as: ME
+  alias Phoenix.Component, as: PhxC
   alias Phoenix.LiveView.JS<%= if @gettext do %>
   import <%= @web_namespace %>.Gettext<% end %>
 
@@ -59,7 +62,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
       >
         <div class="flex min-h-full items-center justify-center">
           <div class="w-full max-w-3xl p-4 sm:p-6 lg:py-8">
-            <.focus_wrap
+            <PhxC.focus_wrap
               id={"#{@id}-container"}
               phx-window-keydown={JS.exec("phx-remove", to: "##{@id}")}
               phx-key="escape"
@@ -73,13 +76,13 @@ defmodule <%= @web_namespace %>.CoreComponents do
                   class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
                   aria-label=<%= if @gettext do %>{gettext("close")}<% else %>"close"<% end %>
                 >
-                  <.icon name="hero-x-mark-solid" class="w-5 h-5" />
+                  <ME.icon name="hero-x-mark-solid" class="w-5 h-5" />
                 </button>
               </div>
               <div id={"#{@id}-content"}>
                 <%%= render_slot(@inner_block) %>
               </div>
-            </.focus_wrap>
+            </PhxC.focus_wrap>
           </div>
         </div>
       </div>
@@ -118,13 +121,13 @@ defmodule <%= @web_namespace %>.CoreComponents do
       {@rest}
     >
       <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
-        <.icon :if={@kind == :info} name="hero-information-circle-mini" class="w-4 h-4" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="w-4 h-4" />
+        <ME.icon :if={@kind == :info} name="hero-information-circle-mini" class="w-4 h-4" />
+        <ME.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="w-4 h-4" />
         <%%= @title %>
       </p>
       <p class="mt-2 text-sm leading-5"><%%= msg %></p>
-      <button type="button" class="group absolute top-1 right-1 p-2" aria-label=<%= if @gettext do %>{gettext("close")}<% else %>"close"<% end %>>
-        <.icon name="hero-x-mark-solid" class="w-5 h-5 opacity-40 group-hover:opacity-70" />
+      <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
+        <ME.icon name="hero-x-mark-solid" class="w-5 h-5 opacity-40 group-hover:opacity-70" />
       </button>
     </div>
     """
@@ -141,9 +144,9 @@ defmodule <%= @web_namespace %>.CoreComponents do
 
   def flash_group(assigns) do
     ~H"""
-    <.flash kind={:info} title="Success!" flash={@flash} />
-    <.flash kind={:error} title="Error!" flash={@flash} />
-    <.flash
+    <ME.flash kind={:info} title="Success!" flash={@flash} />
+    <ME.flash kind={:error} title="Error!" flash={@flash} />
+    <ME.flash
       id="disconnected"
       kind={:error}
       title="We can't find the internet"
@@ -152,7 +155,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
       hidden
     >
       Attempting to reconnect <.icon name="hero-arrow-path" class="ml-1 w-3 h-3 animate-spin" />
-    </.flash>
+    </ME.flash>
     """
   end
 
@@ -181,17 +184,16 @@ defmodule <%= @web_namespace %>.CoreComponents do
 
   def simple_form(assigns) do
     ~H"""
-    <.form :let={f} for={@for} as={@as} {@rest}>
+    <PhxC.form :let={f} for={@for} as={@as} {@rest}>
       <div class="space-y-8 bg-white mt-10">
         <%%= render_slot(@inner_block, f) %>
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           <%%= render_slot(action, f) %>
         </div>
       </div>
-    </.form>
+    </PhxC.form>
     """
   end
-
   @doc """
   Renders a button.
 
@@ -284,7 +286,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
         />
         <%%= @label %>
       </label>
-      <.error :for={msg <- @errors}><%%= msg %></.error>
+      <ME.error :for={msg <- @errors}><%%= msg %></ME.error>
     </div>
     """
   end
@@ -292,7 +294,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
   def input(%{type: "select"} = assigns) do
     ~H"""
     <div phx-feedback-for={@name}>
-      <.label for={@id}><%%= @label %></.label>
+      <ME.label for={@id}><%%= @label %></ME.label>
       <select
         id={@id}
         name={@name}
@@ -303,7 +305,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
         <option :if={@prompt} value=""><%%= @prompt %></option>
         <%%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
       </select>
-      <.error :for={msg <- @errors}><%%= msg %></.error>
+      <ME.error :for={msg <- @errors}><%%= msg %></ME.error>
     </div>
     """
   end
@@ -311,7 +313,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
   def input(%{type: "textarea"} = assigns) do
     ~H"""
     <div phx-feedback-for={@name}>
-      <.label for={@id}><%%= @label %></.label>
+      <ME.label for={@id}><%%= @label %></ME.label>
       <textarea
         id={@id}
         name={@name}
@@ -323,7 +325,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
         ]}
         {@rest}
       ><%%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
-      <.error :for={msg <- @errors}><%%= msg %></.error>
+      <ME.error :for={msg <- @errors}><%%= msg %></ME.error>
     </div>
     """
   end
@@ -332,7 +334,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
   def input(assigns) do
     ~H"""
     <div phx-feedback-for={@name}>
-      <.label for={@id}><%%= @label %></.label>
+      <ME.label for={@id}><%%= @label %></ME.label>
       <input
         type={@type}
         name={@name}
@@ -346,7 +348,7 @@ defmodule <%= @web_namespace %>.CoreComponents do
         ]}
         {@rest}
       />
-      <.error :for={msg <- @errors}><%%= msg %></.error>
+      <ME.error :for={msg <- @errors}><%%= msg %></ME.error>
     </div>
     """
   end
@@ -520,13 +522,13 @@ defmodule <%= @web_namespace %>.CoreComponents do
   def back(assigns) do
     ~H"""
     <div class="mt-16">
-      <.link
+      <PhxC.link
         navigate={@navigate}
         class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
       >
-        <.icon name="hero-arrow-left-solid" class="w-3 h-3" />
+        <ME.icon name="hero-arrow-left-solid" class="w-3 h-3" />
         <%%= render_slot(@inner_block) %>
-      </.link>
+      </PhxC.link>
     </div>
     """
   end
