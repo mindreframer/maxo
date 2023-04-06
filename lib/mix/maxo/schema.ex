@@ -34,6 +34,7 @@ defmodule Mix.Maxo.Schema do
             context_app: nil,
             route_helper: nil,
             route_prefix: nil,
+            live_routing_module: nil,
             api_route_prefix: nil,
             migration_module: nil,
             fixture_unique_functions: %{},
@@ -69,11 +70,13 @@ defmodule Mix.Maxo.Schema do
   end
 
   def new(schema_name, schema_plural, cli_attrs, opts) do
+
     ctx_app = opts[:context_app] || Mix.Maxo.context_app()
     otp_app = Mix.Maxo.otp_app()
     opts = Keyword.merge(Application.get_env(otp_app, :generators, []), opts)
     base = Mix.Maxo.context_base(ctx_app)
     basename = Maxo.Naming.underscore(schema_name)
+    web_module = Mix.Maxo.web_module(base)
     module = Module.concat([base, schema_name])
     repo = opts[:repo] || Module.concat([base, "Repo"])
     file = Mix.Maxo.context_lib_path(ctx_app, basename <> ".ex")
@@ -86,6 +89,8 @@ defmodule Mix.Maxo.Schema do
     api_prefix = Application.get_env(otp_app, :generators)[:api_prefix] || "/api"
     embedded? = Keyword.get(opts, :embedded, false)
     generate? = Keyword.get(opts, :schema, true)
+    schema_alias = module |> Module.split() |> List.last() |> Module.concat(nil)
+    live_routing_module = Module.concat([web_module, web_namespace, "#{schema_alias}LiveRouting"])
 
     singular =
       module
@@ -112,7 +117,7 @@ defmodule Mix.Maxo.Schema do
       repo: repo,
       table: table,
       embedded?: embedded?,
-      alias: module |> Module.split() |> List.last() |> Module.concat(nil),
+      alias: schema_alias,
       file: file,
       attrs: attrs,
       plural: schema_plural,
@@ -138,6 +143,7 @@ defmodule Mix.Maxo.Schema do
       web_path: web_path,
       route_helper: route_helper(web_path, singular),
       route_prefix: route_prefix(web_path, schema_plural),
+      live_routing_module: live_routing_module,
       api_route_prefix: api_route_prefix(web_path, schema_plural, api_prefix),
       sample_id: sample_id(opts),
       context_app: ctx_app,
