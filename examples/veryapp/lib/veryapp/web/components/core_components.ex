@@ -375,7 +375,7 @@ defmodule Veryapp.Web.CoreComponents do
   def error(assigns) do
     ~H"""
     <p class="phx-no-feedback:hidden mt-3 flex gap-3 text-sm leading-6 text-rose-600">
-      <.icon name="hero-exclamation-circle-mini" class="mt-0.5 w-5 h-5 flex-none" />
+      <ME.icon name="hero-exclamation-circle-mini" class="mt-0.5 w-5 h-5 flex-none" />
       <%= render_slot(@inner_block) %>
     </p>
     """
