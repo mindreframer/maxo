@@ -364,7 +364,7 @@ defmodule Mix.Maxo do
     if base |> to_string() |> String.ends_with?("Web") do
       Module.concat([base])
     else
-      Module.concat(["#{base}Web"])
+      Module.concat(["#{base}.Web"])
     end
   end
 

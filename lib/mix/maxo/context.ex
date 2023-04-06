@@ -97,7 +97,7 @@ defmodule Mix.Maxo.Context do
         Module.concat([base])
 
       true ->
-        Module.concat(["#{base}Web"])
+        Module.concat(["#{base}.Web"])
     end
   end
 end
