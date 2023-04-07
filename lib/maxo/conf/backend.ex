@@ -15,10 +15,18 @@ defmodule Maxo.Conf.Backend do
     Util.ok(backend)
   end
 
+  def add_context!(backend = %Backend{}, name, comment \\ "") do
+    add_context(backend, name, comment) |> Util.ok!()
+  end
+
   def add_table(backend = %Backend{}, name, comment \\ "") do
     item = Table.make!(%{name: name, comment: comment})
     backend = Value.insert(backend, "tables.#{name}", item)
     Util.ok(backend)
+  end
+
+  def add_table!(backend = %Backend{}, name, comment \\ "") do
+    add_table(backend, name, comment) |> Util.ok!()
   end
 
   def add_field(backend = %Backend{}, table, args) do
@@ -32,6 +40,10 @@ defmodule Maxo.Conf.Backend do
       |> add_fields_lookup(table, name)
 
     Util.ok(backend)
+  end
+
+  def add_field!(backend = %Backend{}, table, args) do
+    add_field(backend, table, args) |> Util.ok!()
   end
 
   defp add_fields_lookup(backend = %Backend{}, table, name) do
