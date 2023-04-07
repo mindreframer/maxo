@@ -16,6 +16,10 @@ defmodule Maxo.Conf do
     start_link(Backend.init())
   end
 
+  def stop(pid) do
+    Process.exit(pid, :normal)
+  end
+
   def start_link(%State{} = backend) do
     GenServer.start_link(__MODULE__, backend)
   end
