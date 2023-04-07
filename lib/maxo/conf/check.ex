@@ -21,6 +21,11 @@ defmodule Maxo.Conf.Check do
     Maxo.Conf.add_table!(conf, "memberships")
     Maxo.Conf.add_field!(conf, "memberships", %{name: "users_id", type: "int", nullable: false})
     Maxo.Conf.add_field!(conf, "memberships", %{name: "teams_id", type: "int", nullable: false})
+
+    ## relations can be executed after all tables, that simplifies DB schema maintenance
+    Maxo.Conf.add_relation!(conf, "memberships/users_id", "users/id", "o2m")
+    Maxo.Conf.add_relation!(conf, "memberships/teams_id", "teams/id", "o2m")
+
     res = Maxo.Conf.get_conf(conf)
     # IO.inspect("STOPPPING PID #{inspect(conf)}")
     Maxo.Conf.stop(conf)

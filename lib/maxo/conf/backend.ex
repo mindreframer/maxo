@@ -31,7 +31,7 @@ defmodule Maxo.Conf.Backend do
     state =
       state
       |> Value.insert("fields.#{id}", item)
-      |> add_fields_lookup(table, name)
+      |> add_fields_lookup(table, id)
 
     ok(state)
   end
@@ -40,7 +40,7 @@ defmodule Maxo.Conf.Backend do
     [src_table, src_field] = String.split(src, "/")
     [dest_table, dest_field] = String.split(dest, "/")
 
-    name = "#{src} -> #{dest} :: #{cardinality} "
+    name = "#{src} > #{dest} : #{cardinality} "
 
     item =
       Relation.make!(%{

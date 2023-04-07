@@ -37,8 +37,8 @@ defmodule Maxo.ConfTest do
 
       auto_assert(
         %State{
-          fields: %{"users/email" => %Maxo.Conf.Field{name: "email", type: "string"}},
-          fields_lookup: %{"users" => %{"email" => true}}
+          fields: %{"users/email" => %Maxo.Conf.Field{name: "email"}},
+          fields_lookup: %{"users" => %{"users/email" => true}}
         } <- Conf.get_conf(conf)
       )
     end
@@ -64,11 +64,11 @@ defmodule Maxo.ConfTest do
             "users/id" => %Maxo.Conf.Field{name: "id", primary: true, type: "int"}
           },
           fields_lookup: %{
-            "teams" => %{"id" => true, "name" => true, "owner_id" => true},
-            "users" => %{"email" => true, "id" => true}
+            "teams" => %{"teams/id" => true, "teams/name" => true, "teams/owner_id" => true},
+            "users" => %{"users/email" => true, "users/id" => true}
           },
           relations: %{
-            "teams/owner_id -> users/id :: o2o " => %Maxo.Conf.Relation{
+            "teams/owner_id > users/id : o2o " => %Maxo.Conf.Relation{
               dest_table: "users",
               src_field: "owner_id",
               src_table: "teams"

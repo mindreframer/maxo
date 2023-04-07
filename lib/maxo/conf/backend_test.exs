@@ -25,8 +25,8 @@ defmodule Maxo.Conf.BackendTest do
 
       auto_assert(
         %State{
-          fields: %{"users/id" => %Field{name: "id", primary: true}},
-          fields_lookup: %{"users" => %{"id" => true}},
+          fields: %{"users/id" => %Field{name: "id", primary: true, type: "int"}},
+          fields_lookup: %{"users" => %{"users/id" => true}},
           tables: %{"users" => %Table{comment: "Our users table", name: "users"}}
         } <- b
       )
@@ -48,7 +48,7 @@ defmodule Maxo.Conf.BackendTest do
             "users/id" => %Field{name: "id", primary: true, type: "int"},
             "users/name" => %Field{name: "name", nullable: true}
           },
-          fields_lookup: %{"users" => %{"id" => true, "name" => true}},
+          fields_lookup: %{"users" => %{"users/id" => true, "users/name" => true}},
           tables: %{"users" => %Table{comment: "Our users table", name: "users"}}
         } <- b
       )
@@ -79,11 +79,11 @@ defmodule Maxo.Conf.BackendTest do
             "users/name" => %Field{name: "name"}
           },
           fields_lookup: %{
-            "teams" => %{"id" => true, "name" => true},
-            "users" => %{"id" => true, "name" => true}
+            "teams" => %{"teams/id" => true, "teams/name" => true},
+            "users" => %{"users/id" => true, "users/name" => true}
           },
           relations: %{
-            "teams/users_id -> users/id :: o2m " => %Relation{
+            "teams/users_id > users/id : o2m " => %Relation{
               cardinality: "o2m",
               dest_table: "users",
               src_field: "users_id",
@@ -112,7 +112,7 @@ defmodule Maxo.Conf.BackendTest do
         %State{
           contexts: %{"users" => %Context{name: "users"}},
           fields: %{"users/id" => %Field{name: "id", primary: true, type: "int"}},
-          fields_lookup: %{"users" => %{"id" => true}},
+          fields_lookup: %{"users" => %{"users/id" => true}},
           tables: %{"users" => %Table{name: "users"}}
         } <- b
       )
