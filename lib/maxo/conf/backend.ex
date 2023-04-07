@@ -1,34 +1,9 @@
-defmodule Maxo.Conf.Context do
-  use Construct do
-    field(:name)
-    field(:comment, :string, default: "")
-  end
-end
-
-defmodule Maxo.Conf.Field do
-  use Construct do
-    field(:name)
-    field(:comment, :string, default: "")
-    field(:type, [:string, {Construct.Types.Enum, ~w(int string decimal date datetime)}])
-    field(:nullable, :boolean, default: false)
-    field(:primary, :boolean, default: false)
-  end
-end
-
-defmodule Maxo.Conf.Table do
-  use Construct do
-    field(:name)
-    field(:comment, :string, default: "")
-  end
-end
-
 defmodule Maxo.Conf.Backend do
-  alias Maxo.Conf.Util
-  alias Maxo.Conf.Backend
-  alias Maxo.Conf.Context
-  alias Maxo.Conf.Field
-  alias Maxo.Conf.Table
   defstruct contexts: %{}, fields: %{}, tables: %{}, relations: [], fields_lookup: %{}
+
+  alias __MODULE__
+  alias Maxo.Conf.{Context, Field, Table}
+  alias Maxo.Conf.Util
 
   def init() do
     %Backend{}
