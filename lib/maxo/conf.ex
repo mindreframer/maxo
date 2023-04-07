@@ -48,6 +48,17 @@ defmodule Maxo.Conf do
     handle_error(add_field(pid, name, args), {:add_field!, name, args})
   end
 
+  def add_relation(pid, src, dest, cardinality \\ "o2m") do
+    GenServer.call(pid, {:add_relation, src, dest, cardinality})
+  end
+
+  def add_relation!(pid, src, dest, cardinality \\ "o2m") do
+    handle_error(
+      add_relation(pid, src, dest, cardinality),
+      {:add_relation!, src, dest, cardinality}
+    )
+  end
+
   def get_conf(pid) do
     GenServer.call(pid, {:get_conf})
   end
@@ -71,6 +82,12 @@ defmodule Maxo.Conf do
   @impl true
   def handle_call({:add_field, name, args}, _from, %State{} = state) do
     {state, res} = Backend.add_field(state, name, args)
+    {:reply, res, state}
+  end
+
+  @impl true
+  def handle_call({:add_relation, src, dest, cardinality}, _from, %State{} = state) do
+    {state, res} = Backend.add_relation(state, src, dest, cardinality)
     {:reply, res, state}
   end
 

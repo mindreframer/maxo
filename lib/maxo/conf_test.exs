@@ -44,6 +44,42 @@ defmodule Maxo.ConfTest do
     end
   end
 
+  describe "add_relation" do
+    test "works on valid input", %{conf: conf} do
+      auto_assert(:ok <- Conf.add_table(conf, "users"))
+      auto_assert(:ok <- Conf.add_field(conf, "users", %{name: "email"}))
+      auto_assert(:ok <- Conf.add_table(conf, "teams"))
+      auto_assert(:ok <- Conf.add_field(conf, "teams", %{name: "name"}))
+      auto_assert(:ok <- Conf.add_field(conf, "teams", %{name: "owner_id", type: "int"}))
+      auto_assert(:ok <- Conf.add_relation(conf, "teams/owner_id", "users/id", "o2o"))
+
+      auto_assert(
+        %State{
+          fields: %{
+            "teams/name" => %Maxo.Conf.Field{name: "name"},
+            "teams/owner_id" => %Maxo.Conf.Field{name: "owner_id", type: "int"},
+            "users/email" => %Maxo.Conf.Field{name: "email"}
+          },
+          fields_lookup: %{
+            "teams" => %{"name" => true, "owner_id" => true},
+            "users" => %{"email" => true}
+          },
+          relations: %{
+            "teams/owner_id > users/id - o2o " => %Maxo.Conf.Relation{
+              dest_table: "users",
+              src_field: "owner_id",
+              src_table: "teams"
+            }
+          },
+          tables: %{
+            "teams" => %Maxo.Conf.Table{name: "teams"},
+            "users" => %Maxo.Conf.Table{name: "users"}
+          }
+        } <- Conf.get_conf(conf)
+      )
+    end
+  end
+
   defp new_conf(_) do
     {:ok, conf} = Conf.start_link()
     {:ok, %{conf: conf}}

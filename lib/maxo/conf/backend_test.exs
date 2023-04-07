@@ -60,7 +60,7 @@ defmodule Maxo.Conf.BackendTest do
         |> Util.state!()
         |> Backend.add_field("teams", %{name: "name"})
         |> Util.state!()
-        |> Backend.add_relation("teams.users_id", "users.id")
+        |> Backend.add_relation("teams/users_id", "users/id")
         |> Util.state!()
 
       auto_assert(
@@ -68,15 +68,11 @@ defmodule Maxo.Conf.BackendTest do
           fields: %{"teams/name" => %Field{name: "name"}, "users/name" => %Field{name: "name"}},
           fields_lookup: %{"teams" => %{"name" => true}, "users" => %{"name" => true}},
           relations: %{
-            "teams" => %{
-              "users_id__o2m__users" => %{
-                "id" => %Relation{
-                  cardinality: "o2m",
-                  dest_table: "users",
-                  src_field: "users_id",
-                  src_table: "teams"
-                }
-              }
+            "teams/users_id > users/id - o2m " => %Relation{
+              cardinality: "o2m",
+              dest_table: "users",
+              src_field: "users_id",
+              src_table: "teams"
             }
           },
           tables: %{

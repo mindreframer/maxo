@@ -31,10 +31,10 @@ defmodule Maxo.Conf.Backend do
   end
 
   def add_relation(state = %State{}, src, dest, cardinality \\ "o2m") do
-    [src_table, src_field] = String.split(src, ".")
-    [dest_table, dest_field] = String.split(dest, ".")
+    [src_table, src_field] = String.split(src, "/")
+    [dest_table, dest_field] = String.split(dest, "/")
 
-    name = "#{src}__#{cardinality}__#{dest}"
+    name = "#{src} > #{dest} - #{cardinality} "
 
     item =
       Relation.make!(%{
