@@ -63,6 +63,10 @@ defmodule Maxo.Conf do
     GenServer.call(pid, {:get_conf})
   end
 
+  def set_conf(pid, conf) do
+    GenServer.call(pid, {:set_conf, conf})
+  end
+
   ###
   ### GEN SERVER CALLBACKS
   ###
@@ -95,6 +99,11 @@ defmodule Maxo.Conf do
   @impl true
   def handle_call({:get_conf}, _from, %State{} = state) do
     {:reply, state, state}
+  end
+
+  @impl true
+  def handle_call({:set_conf, %State{} = conf}, _from, %State{} = _state) do
+    {:reply, :ok, conf}
   end
 
   defp handle_error(res, args) do
