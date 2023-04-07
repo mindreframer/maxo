@@ -4,7 +4,7 @@ Because we want to configure the full application in a single config, this needs
 
 
 ## API
-{:ok, conf} = Maxo.Conf.Server.start_link()
+{:ok, conf} = Maxo.Conf.start_link()
 
 Maxo.Conf.add_context!(conf, "users")
 Maxo.Conf.add_context!(conf, "tags")
@@ -23,8 +23,8 @@ Maxo.Conf.add_table!(conf, "teams")
 Maxo.Conf.add_field!(conf, "teams", %{name: "name", type: "string", nullable: false})
 
 Maxo.Conf.add_table!(conf, "memberships")
-Maxo.Conf.add_field!(conf, "memberships", %{name: "users_id", type: "integer", nullable: false})
-Maxo.Conf.add_field!(conf, "memberships", %{name: "teams_id", type: "integer", nullable: false})
+Maxo.Conf.add_field!(conf, "memberships", %{name: "users_id", type: "int", nullable: false})
+Maxo.Conf.add_field!(conf, "memberships", %{name: "teams_id", type: "int", nullable: false})
 Maxo.Conf.unique_index!(conf, "memberships", ["users_id"])
 Maxo.Conf.unique_index!(conf, "memberships", ["teams_id"])
 
