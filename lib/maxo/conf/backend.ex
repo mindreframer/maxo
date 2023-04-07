@@ -1,5 +1,5 @@
 defmodule Maxo.Conf.Backend do
-  alias Maxo.Conf.{Context, Field, Table, State}
+  alias Maxo.Conf.{Context, Field, Table, State, Relation}
 
   def init() do
     %State{}
@@ -26,6 +26,28 @@ defmodule Maxo.Conf.Backend do
       state
       |> Value.insert("fields.#{id}", item)
       |> add_fields_lookup(table, name)
+
+    ok(state)
+  end
+
+  def add_relation(state = %State{}, src, dest, cardinality \\ "o2m") do
+    [src_table, src_field] = String.split(src, ".")
+    [dest_table, dest_field] = String.split(dest, ".")
+
+    name = "#{src}__#{cardinality}__#{dest}"
+
+    item =
+      Relation.make!(%{
+        src_table: src_table,
+        src_field: src_field,
+        dest_table: dest_table,
+        dest_field: dest_field,
+        cardinality: cardinality
+      })
+
+    state =
+      state
+      |> Value.insert("relations.#{name}", item)
 
     ok(state)
   end
