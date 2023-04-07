@@ -86,7 +86,7 @@ defmodule Maxo.Conf.BackendTest do
             "teams/users_id > users/id : o2m" => %Relation{
               cardinality: "o2m",
               dest_table: "users",
-              src_field: "users_id",
+              src_column: "users_id",
               src_table: "teams"
             }
           },

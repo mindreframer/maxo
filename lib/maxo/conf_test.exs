@@ -78,7 +78,7 @@ defmodule Maxo.ConfTest do
           relations: %{
             "teams/owner_id > users/id : o2o" => %Relation{
               dest_table: "users",
-              src_field: "owner_id",
+              src_column: "owner_id",
               src_table: "teams"
             }
           },

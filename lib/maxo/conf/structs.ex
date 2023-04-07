@@ -30,9 +30,9 @@ defmodule Maxo.Conf.Relation do
   use Construct do
     field(:comment, :string, default: "")
     field(:src_table, :string)
-    field(:src_field, :string)
+    field(:src_column, :string)
     field(:dest_table, :string)
-    field(:dest_field, :string, default: "id")
+    field(:dest_column, :string, default: "id")
     field(:cardinality, [:string, {Construct.Types.Enum, ~w(o2m o2o)}], default: "o2o")
   end
 end

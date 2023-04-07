@@ -25,9 +25,9 @@ defmodule Maxo.Conf.QueryTest do
             %{
               cardinality: "o2m",
               comment: "",
-              dest_field: "id",
+              dest_column: "id",
               dest_table: "users",
-              src_field: "users_id",
+              src_column: "users_id",
               src_table: "memberships"
             }
           ]
