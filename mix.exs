@@ -24,7 +24,6 @@ defmodule Maxo.MixProject do
     [
       {:virtfs, "~> 0.1.3"},
       {:construct, github: "ExpressApp/construct"},
-      {:pathex, "~> 2.5"},
       {:test_iex, github: "mindreframer/test_iex", only: [:test]},
       {:mneme, "~> 0.3.0-rc.0", only: [:test]}
     ]
