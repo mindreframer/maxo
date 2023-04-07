@@ -23,7 +23,7 @@ defmodule Maxo.Conf.Table do
 end
 
 defmodule Maxo.Conf.Backend do
-  use Pathex
+  alias Maxo.Conf.Util
   alias Maxo.Conf.Backend
   alias Maxo.Conf.Context
   alias Maxo.Conf.Field
@@ -35,46 +35,31 @@ defmodule Maxo.Conf.Backend do
   end
 
   def add_context(backend = %Backend{}, name, comment \\ "") do
-    target = path(:contexts / name)
     item = Context.make!(%{name: name, comment: comment})
-
-    with {:ok, backend} <- Pathex.force_set(backend, target, item) do
-      {:ok, backend}
-    end
+    backend = Value.insert(backend, "contexts.#{name}", item)
+    Util.ok(backend)
   end
 
   def add_table(backend = %Backend{}, name, comment \\ "") do
-    target = path(:tables / name)
     item = Table.make!(%{name: name, comment: comment})
-
-    with {:ok, backend} <- Pathex.force_set(backend, target, item) do
-      {:ok, backend}
-    end
+    backend = Value.insert(backend, "tables.#{name}", item)
+    Util.ok(backend)
   end
 
   def add_field(backend = %Backend{}, table, args) do
-    name = Map.get(args, :name) || Map.fetch!(args, "name")
-    id = "#{table}.#{name}"
-    target = path(:fields / id)
     item = Field.make!(args)
+    name = Map.get(args, :name) || Map.fetch!(args, "name")
+    id = "#{table}/#{name}"
 
-    with {:ok, backend} <- Pathex.force_set(backend, target, item),
-         {:ok, backend} <- add_fields_lookup(backend, table, name) do
-      {:ok, backend}
-    end
+    backend =
+      backend
+      |> Value.insert("fields.#{id}", item)
+      |> add_fields_lookup(table, name)
+
+    Util.ok(backend)
   end
 
   defp add_fields_lookup(backend = %Backend{}, table, name) do
-    target = path(:fields_lookup / table / name)
-    table_path = path(:fields_lookup / table)
-
-    backend =
-      if Pathex.exists?(backend, table_path) do
-        backend
-      else
-        Pathex.force_set!(backend, table_path, %{})
-      end
-
-    Pathex.force_set(backend, target, true)
+    Value.insert(backend, "fields_lookup.#{table}.#{name}", true)
   end
 end

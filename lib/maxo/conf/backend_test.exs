@@ -42,7 +42,7 @@ defmodule Maxo.Conf.BackendTest do
       auto_assert(
         %Backend{
           fields: %{
-            "users.name" => %Maxo.Conf.Field{name: "name", nullable: true, type: "string"}
+            "users/name" => %Maxo.Conf.Field{name: "name", nullable: true, type: "string"}
           },
           fields_lookup: %{"users" => %{"name" => true}},
           tables: %{"users" => %Maxo.Conf.Table{comment: "Our users table", name: "users"}}
