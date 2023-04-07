@@ -24,7 +24,11 @@ defmodule Maxo.Conf.BackendTest do
       b = Backend.init() |> Backend.add_table("users", "Our users table") |> Util.state!()
 
       auto_assert(
-        %State{tables: %{"users" => %Table{comment: "Our users table", name: "users"}}} <- b
+        %State{
+          fields: %{"users/id" => %Field{name: "id", primary: true}},
+          fields_lookup: %{"users" => %{"id" => true}},
+          tables: %{"users" => %Table{comment: "Our users table", name: "users"}}
+        } <- b
       )
     end
   end
@@ -96,6 +100,8 @@ defmodule Maxo.Conf.BackendTest do
       auto_assert(
         %State{
           contexts: %{"users" => %Context{name: "users"}},
+          fields: %{"users/id" => %Field{name: "id", primary: true}},
+          fields_lookup: %{"users" => %{"id" => true}},
           tables: %{"users" => %Table{name: "users"}}
         } <- b
       )
