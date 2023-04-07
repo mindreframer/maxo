@@ -2,6 +2,7 @@ defmodule Maxo.Conf.Query do
   alias Maxo.Conf
   alias Maxo.Conf.State
   alias Maxo.Conf.MapValue
+  alias Maxo.Conf.Value
   alias Maxo.Conf.Naming
 
   def get_context(conf, name) do
@@ -13,7 +14,13 @@ defmodule Maxo.Conf.Query do
   def get_table(conf, name) do
     conf = resolve_conf(conf)
 
-    MapValue.get(conf, "tables.#{name}")
+    t = MapValue.get(conf, "tables.#{name}")
+    columns = columns_for_table(conf, name)
+    relations = relations_for_table(conf, name)
+
+    Value.init(t)
+    |> Map.put(:columns, columns)
+    |> Map.put(:relations, relations)
   end
 
   def get_column(conf, table, name) do
@@ -26,7 +33,13 @@ defmodule Maxo.Conf.Query do
   def columns_for_table(conf, table) do
     values = MapValue.get(conf, "columns_lookup.#{table}")
     keys = (values || %{}) |> Map.keys()
-    Enum.map(keys, &get_column(conf, table, &1))
+    Enum.map(keys, fn key -> MapValue.get(conf, "columns.#{key}") |> Value.init() end)
+  end
+
+  def relations_for_table(conf, table) do
+    values = MapValue.get(conf, "relations_lookup.#{table}")
+    keys = (values || %{}) |> Map.keys()
+    Enum.map(keys, fn key -> MapValue.get(conf, "relations.#{key}") |> Value.init() end)
   end
 
   defp resolve_conf(conf) when is_pid(conf) do
