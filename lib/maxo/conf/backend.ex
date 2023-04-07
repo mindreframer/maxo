@@ -26,7 +26,13 @@ defmodule Maxo.Conf.Backend do
   end
 
   def add_column(state = %State{}, table, args) do
-    item = Column.make!(args)
+    counter = get_columns_counter(state, table)
+
+    item =
+      args
+      |> Map.merge(%{order: counter})
+      |> Column.make!()
+
     name = Map.get(args, :name) || Map.fetch!(args, "name")
     id = Naming.column(table, name)
 
@@ -34,6 +40,7 @@ defmodule Maxo.Conf.Backend do
       state
       |> MapValue.insert("columns.#{id}", item)
       |> add_columns_lookup(table, id)
+      |> inc_columns_counter(table)
 
     ok(state)
   end
@@ -42,7 +49,7 @@ defmodule Maxo.Conf.Backend do
     [src_table, src_column] = String.split(src, "/")
     [dest_table, dest_column] = String.split(dest, "/")
 
-    id = "#{src} > #{dest} : #{cardinality}"
+    id = Naming.relation(src, dest, cardinality)
 
     item =
       Relation.make!(%{
@@ -68,6 +75,15 @@ defmodule Maxo.Conf.Backend do
 
   defp add_relations_lookup(state = %State{}, table, name, type) do
     MapValue.insert(state, "relations_lookup.#{table}.#{name}", type)
+  end
+
+  def inc_columns_counter(state = %State{}, table) do
+    value = get_columns_counter(state, table)
+    MapValue.insert(state, "columns_counter.#{table}", value + 1)
+  end
+
+  def get_columns_counter(state = %State{}, table) do
+    MapValue.get(state, "columns_counter.#{table}") || 1
   end
 
   defp ok(state), do: {state, :ok}

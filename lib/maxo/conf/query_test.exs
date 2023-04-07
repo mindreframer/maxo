@@ -14,10 +14,31 @@ defmodule Maxo.Conf.QueryTest do
       auto_assert(
         %{
           columns: [
-            %{comment: "", name: "email", nullable: false, primary: false, type: "string"},
-            %{comment: "", name: "id", nullable: false, primary: true, type: "int"},
-            %{comment: "", name: "name", nullable: false, primary: false, type: "string"},
-            %{comment: "", name: "password_hash", nullable: false, primary: false, type: "string"}
+            %{comment: "", name: "id", nullable: false, order: 1, primary: true, type: "int"},
+            %{
+              comment: "",
+              name: "name",
+              nullable: false,
+              order: 2,
+              primary: false,
+              type: "string"
+            },
+            %{
+              comment: "",
+              name: "email",
+              nullable: false,
+              order: 3,
+              primary: false,
+              type: "string"
+            },
+            %{
+              comment: "",
+              name: "password_hash",
+              nullable: false,
+              order: 4,
+              primary: false,
+              type: "string"
+            }
           ],
           comment: "",
           name: "users",

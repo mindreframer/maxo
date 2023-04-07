@@ -5,5 +5,6 @@ defmodule Maxo.Conf.State do
             tables: %{},
             relations: %{},
             columns_lookup: %{},
-            relations_lookup: %{}
+            relations_lookup: %{},
+            columns_counter: %{}
 end

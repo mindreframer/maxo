@@ -9,6 +9,7 @@ defmodule Maxo.Conf.Column do
   use Construct do
     field(:name)
     field(:comment, :string, default: "")
+    field(:order, :integer)
 
     field(:type, [:string, {Construct.Types.Enum, ~w(int string decimal date datetime)}],
       default: "string"

@@ -33,7 +33,9 @@ defmodule Maxo.Conf.Query do
   def columns_for_table(conf, table) do
     values = MapValue.get(conf, "columns_lookup.#{table}")
     keys = (values || %{}) |> Map.keys()
+
     Enum.map(keys, fn key -> MapValue.get(conf, "columns.#{key}") |> Value.init() end)
+    |> Enum.sort_by(& &1.order)
   end
 
   def relations_for_table(conf, table) do
