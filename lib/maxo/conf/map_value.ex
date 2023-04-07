@@ -1,4 +1,5 @@
-defmodule Maxo.Conf.Value do
+# vendored from https://github.com/team-softaliza/value
+defmodule Maxo.Conf.MapValue do
   @moduledoc """
     Value
   """

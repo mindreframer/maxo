@@ -1,26 +1,32 @@
 defmodule Maxo.Conf.Query do
   alias Maxo.Conf
   alias Maxo.Conf.State
-  alias Maxo.Conf.Value
+  alias Maxo.Conf.MapValue
   alias Maxo.Conf.Naming
 
   def get_context(conf, name) do
     conf = resolve_conf(conf)
 
-    Value.get(conf, "contexts.#{name}")
+    MapValue.get(conf, "contexts.#{name}")
   end
 
   def get_table(conf, name) do
     conf = resolve_conf(conf)
 
-    Value.get(conf, "tables.#{name}")
+    MapValue.get(conf, "tables.#{name}")
   end
 
   def get_column(conf, table, name) do
     conf = resolve_conf(conf)
 
     id = Naming.column(table, name)
-    Value.get(conf, "columns.#{id}")
+    MapValue.get(conf, "columns.#{id}")
+  end
+
+  def columns_for_table(conf, table) do
+    values = MapValue.get(conf, "columns_lookup.#{table}")
+    keys = (values || %{}) |> Map.keys()
+    Enum.map(keys, &get_column(conf, table, &1))
   end
 
   defp resolve_conf(conf) when is_pid(conf) do

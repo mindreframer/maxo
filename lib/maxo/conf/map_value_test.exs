@@ -1,126 +1,129 @@
 defmodule ValueTest do
   use ExUnit.Case
 
-  alias Maxo.Conf.Value
+  alias Maxo.Conf.MapValue
 
-  describe "Value.get" do
+  describe "MapValue.get" do
     test "get required value in plain key atom map" do
       scope = %{a: 1, b: 2, c: 3}
-      assert 1 == Value.getr!(scope, "a")
-      assert {:ok, 1} == Value.getr(scope, "a")
-      assert {:ok, 1} == Value.getr(scope, "a", when: true)
-      assert {:ok, nil} == Value.getr(scope, "a", when: false)
+      assert 1 == MapValue.getr!(scope, "a")
+      assert {:ok, 1} == MapValue.getr(scope, "a")
+      assert {:ok, 1} == MapValue.getr(scope, "a", when: true)
+      assert {:ok, nil} == MapValue.getr(scope, "a", when: false)
     end
 
     test "throw error when try get required value in plain key atom map" do
       scope = %{a: 1, b: 2, c: 3}
-      assert {:error, :required} == Value.getr(scope, "d")
+      assert {:error, :required} == MapValue.getr(scope, "d")
 
       assert_raise(RuntimeError, "Value of 'd' is required", fn ->
-        Value.getr!(scope, "d")
+        MapValue.getr!(scope, "d")
       end)
     end
 
     test "get value in plain key atom map" do
       scope = %{a: 1, b: 2, c: 3}
-      assert 1 == Value.get(scope, "a")
+      assert 1 == MapValue.get(scope, "a")
     end
 
     test "get value in plain key string map" do
       scope = %{"a" => 1, "b" => 2, "c" => 3}
-      assert 1 == Value.get(scope, "a")
+      assert 1 == MapValue.get(scope, "a")
     end
 
     test "get value in deep key atom map" do
       scope = %{a: 1, b: 2, c: 3, d: %{a: 4}}
-      assert 4 == Value.get(scope, "d.a")
+      assert 4 == MapValue.get(scope, "d.a")
     end
 
     test "get nil in deep key atom map when not exists field" do
       scope = %{a: 1, b: 2, c: 3, d: %{a: 4}}
-      assert nil == Value.get(scope, "d.b")
+      assert nil == MapValue.get(scope, "d.b")
     end
 
     test "get value in deep key string map" do
       scope = %{"a" => 1, "b" => 2, "c" => 3, "d" => %{"a" => 4}}
-      assert 4 == Value.get(scope, "d.a")
+      assert 4 == MapValue.get(scope, "d.a")
     end
 
     test "get nil in deep key string map when not exists field" do
       scope = %{"a" => 1, "b" => 2, "c" => 3, "d" => %{"a" => 4}}
-      assert nil == Value.get(scope, "d.b")
+      assert nil == MapValue.get(scope, "d.b")
     end
 
     test "get value in deep key string or atom (mescled) map" do
       scope = %{"a" => 1, "b" => 2, "c" => 3, d: %{"a" => 4}}
-      assert 4 == Value.get(scope, "d.a")
+      assert 4 == MapValue.get(scope, "d.a")
       scope = %{"a" => 1, "b" => 2, "c" => 3, d: %{"a" => 4, e: 7}}
-      assert 7 == Value.get(scope, "d.e")
+      assert 7 == MapValue.get(scope, "d.e")
     end
 
     test "get values in deep key string map when field type atom or string" do
       scope = %{"a" => 1, "b" => [1, 2], "c" => 3, "d" => [%{"a" => 4}, %{a: 1, c: 1}]}
-      assert [1, 2] == Value.get(scope, "b")
-      assert [4, 1] == Value.get(scope, "d.a")
+      assert [1, 2] == MapValue.get(scope, "b")
+      assert [4, 1] == MapValue.get(scope, "d.a")
     end
 
     test "get optional fields values with null values" do
       scope = %{"a" => 5, "b" => ""}
-      assert 5 == Value.get(scope, "e|b|a", null_values: [nil, ""])
+      assert 5 == MapValue.get(scope, "e|b|a", null_values: [nil, ""])
     end
 
     test "get optional fields values" do
       scope = %{"a" => 1, "b" => [1, 2], "c" => 3, "d" => [%{"a" => 4}, %{a: 1, c: 1}]}
-      assert [1, 2] == Value.get(scope, "b|a")
-      assert 1 == Value.get(scope, "e|a")
-      assert 1 == Value.get(scope, "e|f|a")
-      assert 1 == Value.get(scope, "e|f|a", null_values: [nil, ""])
-      assert 1 == Value.get(scope, "e|f|a", when: true)
-      assert nil == Value.get(scope, "e|f|a", when: false)
+      assert [1, 2] == MapValue.get(scope, "b|a")
+      assert 1 == MapValue.get(scope, "e|a")
+      assert 1 == MapValue.get(scope, "e|f|a")
+      assert 1 == MapValue.get(scope, "e|f|a", null_values: [nil, ""])
+      assert 1 == MapValue.get(scope, "e|f|a", when: true)
+      assert nil == MapValue.get(scope, "e|f|a", when: false)
     end
 
     test "get multiple fields values" do
       scope = %{"a" => 1, "b" => [1, 2], "c" => 3, "d" => [%{"a" => 4}, %{a: 1, c: 1}]}
-      assert %{"a" => 1, "b" => [1, 2]} == Value.getm(scope, "b,a")
-      assert %{"b" => [1, 2], "d.a" => [4, 1]} == Value.getm(scope, "b,d.a")
-      assert %{"b" => [1, 2], "d.a" => [4, 1]} == Value.getm({:error, scope}, "b,d.a")
-      assert %{"b" => [1, 2], "d.a" => [4, 1]} == Value.getm({:error, scope}, "b,d.a", when: true)
-      assert nil == Value.getm({:error, scope}, "b,d.a", when: false)
+      assert %{"a" => 1, "b" => [1, 2]} == MapValue.getm(scope, "b,a")
+      assert %{"b" => [1, 2], "d.a" => [4, 1]} == MapValue.getm(scope, "b,d.a")
+      assert %{"b" => [1, 2], "d.a" => [4, 1]} == MapValue.getm({:error, scope}, "b,d.a")
+
+      assert %{"b" => [1, 2], "d.a" => [4, 1]} ==
+               MapValue.getm({:error, scope}, "b,d.a", when: true)
+
+      assert nil == MapValue.getm({:error, scope}, "b,d.a", when: false)
     end
   end
 
-  describe "Value.insert" do
+  describe "MapValue.insert" do
     test "insert value in map" do
       scope = %{a: 1, b: 2, c: 3}
-      assert Map.merge(scope, %{"ab" => 1}) == Value.insert(scope, "ab", 1)
+      assert Map.merge(scope, %{"ab" => 1}) == MapValue.insert(scope, "ab", 1)
     end
 
     test "replace value in deep key atom map" do
       scope = %{a: 1, b: 2, c: 3, d: %{a: 4}}
-      assert %{a: 1, b: 2, c: 3, d: %{a: 3}} == Value.insert(scope, "d.a", 3)
+      assert %{a: 1, b: 2, c: 3, d: %{a: 3}} == MapValue.insert(scope, "d.a", 3)
 
       scope = %{a: 1, b: 2, c: 3, d: %{"a" => 4}}
-      assert %{a: 1, b: 2, c: 3, d: %{"a" => 3}} == Value.insert(scope, "d.a", 3)
+      assert %{a: 1, b: 2, c: 3, d: %{"a" => 3}} == MapValue.insert(scope, "d.a", 3)
     end
 
     test "insert value on every field in field list on map " do
       scope = %{"d" => [%{"a" => 4}, %{a: 2}]}
-      assert %{"d" => [%{"a" => 1}, %{a: 1}]} == Value.insert(scope, "d[@].a", 1)
+      assert %{"d" => [%{"a" => 1}, %{a: 1}]} == MapValue.insert(scope, "d[@].a", 1)
     end
 
     test "insert value on index field in field list on map " do
       scope = %{"d" => [%{"a" => 4}, %{a: 2}]}
-      assert %{"d" => [%{"a" => 1}, %{a: 2}]} == Value.insert(scope, "d[0].a", 1)
+      assert %{"d" => [%{"a" => 1}, %{a: 2}]} == MapValue.insert(scope, "d[0].a", 1)
     end
 
     test "insert new field value on index field in field list on map " do
       scope = %{"d" => [%{"a" => 4}, %{a: 2}]}
-      assert %{"d" => [%{"a" => 4, "c" => 1}, %{a: 2}]} == Value.insert(scope, "d[0].c", 1)
+      assert %{"d" => [%{"a" => 4, "c" => 1}, %{a: 2}]} == MapValue.insert(scope, "d[0].c", 1)
     end
 
     test "insert new field value on all list" do
       scope = [%{"a" => 4}, %{a: 2}]
-      assert [%{"a" => 4, "c" => 1}, %{"c" => 1, a: 2}] == Value.insert(scope, "_[*].c", 1)
+      assert [%{"a" => 4, "c" => 1}, %{"c" => 1, a: 2}] == MapValue.insert(scope, "_[*].c", 1)
     end
 
     test "deep insert" do
@@ -153,8 +156,8 @@ defmodule ValueTest do
       value =
         keys
         |> Enum.reduce(%{}, fn {key, value}, acc ->
-          v = Value.get(map, key)
-          if is_nil(v), do: acc, else: Value.insert(acc, value, v)
+          v = MapValue.get(map, key)
+          if is_nil(v), do: acc, else: MapValue.insert(acc, value, v)
         end)
 
       assert %{
@@ -186,8 +189,8 @@ defmodule ValueTest do
       value =
         keys
         |> Enum.reduce(%{}, fn {key, value}, acc ->
-          v = Value.get(map, key)
-          if is_nil(v), do: acc, else: Value.insert(acc, value, v)
+          v = MapValue.get(map, key)
+          if is_nil(v), do: acc, else: MapValue.insert(acc, value, v)
         end)
 
       assert %{

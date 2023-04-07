@@ -1,6 +1,6 @@
 defmodule Maxo.Conf.Backend do
   alias Maxo.Conf.{Context, Column, Table, State, Relation}
-  alias Maxo.Conf.Value
+  alias Maxo.Conf.MapValue
   alias Maxo.Conf.Naming
 
   def init() do
@@ -9,13 +9,13 @@ defmodule Maxo.Conf.Backend do
 
   def add_context(state = %State{}, name, comment \\ "") do
     item = Context.make!(%{name: name, comment: comment})
-    state = Value.insert(state, "contexts.#{name}", item)
+    state = MapValue.insert(state, "contexts.#{name}", item)
     ok(state)
   end
 
   def add_table(state = %State{}, name, comment \\ "") do
     item = Table.make!(%{name: name, comment: comment})
-    state = Value.insert(state, "tables.#{name}", item)
+    state = MapValue.insert(state, "tables.#{name}", item)
 
     state =
       state
@@ -32,7 +32,7 @@ defmodule Maxo.Conf.Backend do
 
     state =
       state
-      |> Value.insert("columns.#{id}", item)
+      |> MapValue.insert("columns.#{id}", item)
       |> add_columns_lookup(table, id)
 
     ok(state)
@@ -55,7 +55,7 @@ defmodule Maxo.Conf.Backend do
 
     state =
       state
-      |> Value.insert("relations.#{id}", item)
+      |> MapValue.insert("relations.#{id}", item)
       |> add_relations_lookup(src_table, id, "out")
       |> add_relations_lookup(dest_table, id, "in")
 
@@ -63,11 +63,11 @@ defmodule Maxo.Conf.Backend do
   end
 
   defp add_columns_lookup(state = %State{}, table, name) do
-    Value.insert(state, "columns_lookup.#{table}.#{name}", true)
+    MapValue.insert(state, "columns_lookup.#{table}.#{name}", true)
   end
 
   defp add_relations_lookup(state = %State{}, table, name, type) do
-    Value.insert(state, "relations_lookup.#{table}.#{name}", type)
+    MapValue.insert(state, "relations_lookup.#{table}.#{name}", type)
   end
 
   defp ok(state), do: {state, :ok}
