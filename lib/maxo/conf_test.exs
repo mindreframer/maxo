@@ -14,7 +14,9 @@ defmodule Maxo.ConfTest do
 
       b = Conf.get_conf(conf)
 
-      auto_assert(b)
+      auto_assert(
+        %State{contexts: %{"users" => %Context{comment: "our users logic", name: "users"}}} <- b
+      )
     end
   end
 
@@ -24,7 +26,13 @@ defmodule Maxo.ConfTest do
 
       b = Conf.get_conf(conf)
 
-      auto_assert(b)
+      auto_assert(
+        %State{
+          columns: %{"users/id" => %Column{name: "id", primary: true, type: "int"}},
+          columns_lookup: %{"users" => %{"users/id" => true}},
+          tables: %{"users" => %Table{comment: "our users table", name: "users"}}
+        } <- b
+      )
     end
   end
 
@@ -34,7 +42,12 @@ defmodule Maxo.ConfTest do
 
       b = Conf.get_conf(conf)
 
-      auto_assert(b)
+      auto_assert(
+        %State{
+          columns: %{"users/email" => %Column{name: "email"}},
+          columns_lookup: %{"users" => %{"users/email" => true}}
+        } <- b
+      )
     end
   end
 
@@ -49,7 +62,29 @@ defmodule Maxo.ConfTest do
 
       b = Conf.get_conf(conf)
 
-      auto_assert(b)
+      auto_assert(
+        %State{
+          columns: %{
+            "teams/id" => %Column{name: "id", primary: true, type: "int"},
+            "teams/name" => %Column{name: "name"},
+            "teams/owner_id" => %Column{name: "owner_id", type: "int"},
+            "users/email" => %Column{name: "email"},
+            "users/id" => %Column{name: "id", primary: true, type: "int"}
+          },
+          columns_lookup: %{
+            "teams" => %{"teams/id" => true, "teams/name" => true, "teams/owner_id" => true},
+            "users" => %{"users/email" => true, "users/id" => true}
+          },
+          relations: %{
+            "teams/owner_id > users/id : o2o " => %Relation{
+              dest_table: "users",
+              src_field: "owner_id",
+              src_table: "teams"
+            }
+          },
+          tables: %{"teams" => %Table{name: "teams"}, "users" => %Table{name: "users"}}
+        } <- b
+      )
     end
   end
 
