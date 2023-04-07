@@ -1,5 +1,5 @@
 defmodule Maxo.Conf.Backend do
-  alias Maxo.Conf.{Context, Column, Table, State, Relation}
+  alias Maxo.Conf.{Context, Column, Table, State, Relation, Index}
   alias Maxo.Conf.MapValue
   alias Maxo.Conf.Naming
 
@@ -41,6 +41,27 @@ defmodule Maxo.Conf.Backend do
       |> MapValue.insert("columns.#{id}", item)
       |> add_columns_lookup(table, id)
       |> inc_columns_counter(table)
+
+    ok(state)
+  end
+
+  def add_index(state = %State{}, table, columns, opts \\ []) do
+    unique = Keyword.get(opts, :unique, false)
+    # type = Keyword.get(opts, :type, "btree")
+    name = "#{table}_#{Enum.join(columns, "_")}_index"
+
+    item =
+      %{
+        name: name,
+        table: table,
+        unique: unique,
+        columns: columns
+      }
+      |> Index.make!()
+
+    state =
+      state
+      |> MapValue.insert("indexes.#{name}", item)
 
     ok(state)
   end

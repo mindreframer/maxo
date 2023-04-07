@@ -92,6 +92,39 @@ defmodule Maxo.ConfTest do
     end
   end
 
+  describe "add_index" do
+    test "works on valid input", %{conf: conf} do
+      auto_assert(:ok <- Conf.add_table(conf, "users"))
+      auto_assert(:ok <- Conf.add_column(conf, "users", %{name: "email"}))
+      auto_assert(:ok <- Conf.add_column(conf, "users", %{name: "city"}))
+      auto_assert(:ok <- Conf.add_index(conf, "users", ["email", "city"]))
+
+      b = Conf.get_conf(conf)
+
+      auto_assert(
+        %State{
+          columns: %{
+            "users/city" => %Column{name: "city", order: 3},
+            "users/email" => %Column{name: "email", order: 2},
+            "users/id" => %Column{name: "id", order: 1, primary: true, type: "int"}
+          },
+          columns_counter: %{"users" => 4},
+          columns_lookup: %{
+            "users" => %{"users/city" => true, "users/email" => true, "users/id" => true}
+          },
+          indexes: %{
+            "users_email_city_index" => %Maxo.Conf.Index{
+              columns: ["email", "city"],
+              name: "users_email_city_index",
+              table: "users"
+            }
+          },
+          tables: %{"users" => %Table{name: "users"}}
+        } <- b
+      )
+    end
+  end
+
   defp new_conf(_) do
     {:ok, conf} = Conf.start_link()
     {:ok, %{conf: conf}}

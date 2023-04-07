@@ -27,6 +27,16 @@ defmodule Maxo.Conf.Table do
   end
 end
 
+defmodule Maxo.Conf.Index do
+  use Construct do
+    field(:name)
+    field(:table)
+    field(:unique, :boolean, default: false)
+    field(:columns, {:array, :string})
+    field(:comment, :string, default: "")
+  end
+end
+
 defmodule Maxo.Conf.Relation do
   use Construct do
     field(:comment, :string, default: "")

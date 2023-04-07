@@ -59,6 +59,17 @@ defmodule Maxo.Conf do
     )
   end
 
+  def add_index(pid, table, columns, opts \\ []) do
+    GenServer.call(pid, {:add_index, table, columns, opts})
+  end
+
+  def add_index!(pid, table, columns, opts \\ []) do
+    handle_error(
+      add_index(pid, table, columns, opts),
+      {:add_index!, table, columns, opts}
+    )
+  end
+
   def get_conf(pid) do
     GenServer.call(pid, {:get_conf})
   end
@@ -92,6 +103,12 @@ defmodule Maxo.Conf do
   @impl true
   def handle_call({:add_relation, src, dest, cardinality}, _from, %State{} = state) do
     {state, res} = Backend.add_relation(state, src, dest, cardinality)
+    {:reply, res, state}
+  end
+
+  @impl true
+  def handle_call({:add_index, table, columns, opts}, _from, %State{} = state) do
+    {state, res} = Backend.add_index(state, table, columns, opts)
     {:reply, res, state}
   end
 
