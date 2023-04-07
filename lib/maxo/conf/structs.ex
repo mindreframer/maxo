@@ -5,7 +5,7 @@ defmodule Maxo.Conf.Context do
   end
 end
 
-defmodule Maxo.Conf.Field do
+defmodule Maxo.Conf.Column do
   use Construct do
     field(:name)
     field(:comment, :string, default: "")

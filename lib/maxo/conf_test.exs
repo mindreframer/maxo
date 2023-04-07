@@ -3,8 +3,8 @@ defmodule Maxo.ConfTest do
   use Mneme, action: :accept, default_pattern: :last
 
   alias Maxo.Conf
-  alias Maxo.Conf.State
   alias Maxo.Conf.Util
+  alias Maxo.Conf.{Context, Column, Table, State, Relation}
 
   setup :new_conf
 
@@ -12,10 +12,10 @@ defmodule Maxo.ConfTest do
     test "works on valid input", %{conf: conf} do
       auto_assert(:ok <- Conf.add_context(conf, "users", "our users logic"))
 
+      b = Conf.get_conf(conf)
+
       auto_assert(
-        %State{
-          contexts: %{"users" => %Maxo.Conf.Context{comment: "our users logic", name: "users"}}
-        } <- Conf.get_conf(conf)
+        %State{contexts: %{"users" => %Context{comment: "our users logic", name: "users"}}} <- b
       )
     end
   end
@@ -24,9 +24,14 @@ defmodule Maxo.ConfTest do
     test "works on valid input", %{conf: conf} do
       auto_assert(:ok <- Conf.add_table(conf, "users", "our users table"))
 
+      b = Conf.get_conf(conf)
+
       auto_assert(
-        %State{tables: %{"users" => %Maxo.Conf.Table{comment: "our users table", name: "users"}}} <-
-          Conf.get_conf(conf)
+        %State{
+          fields: %{"users/id" => %Column{name: "id", primary: true, type: "int"}},
+          fields_lookup: %{"users" => %{"users/id" => true}},
+          tables: %{"users" => %Table{comment: "our users table", name: "users"}}
+        } <- b
       )
     end
   end
@@ -35,11 +40,13 @@ defmodule Maxo.ConfTest do
     test "works on valid input", %{conf: conf} do
       auto_assert(:ok <- Conf.add_field(conf, "users", %{name: "email", type: "string"}))
 
+      b = Conf.get_conf(conf)
+
       auto_assert(
         %State{
-          fields: %{"users/email" => %Maxo.Conf.Field{name: "email"}},
+          fields: %{"users/email" => %Column{name: "email"}},
           fields_lookup: %{"users" => %{"users/email" => true}}
-        } <- Conf.get_conf(conf)
+        } <- b
       )
     end
   end
@@ -52,32 +59,30 @@ defmodule Maxo.ConfTest do
       auto_assert(:ok <- Conf.add_field(conf, "teams", %{name: "name"}))
       auto_assert(:ok <- Conf.add_field(conf, "teams", %{name: "owner_id", type: "int"}))
       auto_assert(:ok <- Conf.add_relation(conf, "teams/owner_id", "users/id", "o2o"))
+
       b = Conf.get_conf(conf)
 
       auto_assert(
         %State{
           fields: %{
-            "teams/id" => %Maxo.Conf.Field{name: "id", primary: true, type: "int"},
-            "teams/name" => %Maxo.Conf.Field{name: "name"},
-            "teams/owner_id" => %Maxo.Conf.Field{name: "owner_id", type: "int"},
-            "users/email" => %Maxo.Conf.Field{name: "email"},
-            "users/id" => %Maxo.Conf.Field{name: "id", primary: true, type: "int"}
+            "teams/id" => %Column{name: "id", primary: true, type: "int"},
+            "teams/name" => %Column{name: "name"},
+            "teams/owner_id" => %Column{name: "owner_id", type: "int"},
+            "users/email" => %Column{name: "email"},
+            "users/id" => %Column{name: "id", primary: true, type: "int"}
           },
           fields_lookup: %{
             "teams" => %{"teams/id" => true, "teams/name" => true, "teams/owner_id" => true},
             "users" => %{"users/email" => true, "users/id" => true}
           },
           relations: %{
-            "teams/owner_id > users/id : o2o " => %Maxo.Conf.Relation{
+            "teams/owner_id > users/id : o2o " => %Relation{
               dest_table: "users",
               src_field: "owner_id",
               src_table: "teams"
             }
           },
-          tables: %{
-            "teams" => %Maxo.Conf.Table{name: "teams"},
-            "users" => %Maxo.Conf.Table{name: "users"}
-          }
+          tables: %{"teams" => %Table{name: "teams"}, "users" => %Table{name: "users"}}
         } <- b
       )
     end

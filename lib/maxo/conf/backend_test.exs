@@ -4,7 +4,7 @@ defmodule Maxo.Conf.BackendTest do
   alias Maxo.Conf.Backend
   alias Maxo.Conf.Util
 
-  alias Maxo.Conf.{Context, Field, Table, State, Relation}
+  alias Maxo.Conf.{Context, Column, Table, State, Relation}
 
   describe "add_context" do
     test "works" do
@@ -25,7 +25,7 @@ defmodule Maxo.Conf.BackendTest do
 
       auto_assert(
         %State{
-          fields: %{"users/id" => %Field{name: "id", primary: true, type: "int"}},
+          fields: %{"users/id" => %Column{name: "id", primary: true, type: "int"}},
           fields_lookup: %{"users" => %{"users/id" => true}},
           tables: %{"users" => %Table{comment: "Our users table", name: "users"}}
         } <- b
@@ -45,8 +45,8 @@ defmodule Maxo.Conf.BackendTest do
       auto_assert(
         %State{
           fields: %{
-            "users/id" => %Field{name: "id", primary: true, type: "int"},
-            "users/name" => %Field{name: "name", nullable: true}
+            "users/id" => %Column{name: "id", primary: true, type: "int"},
+            "users/name" => %Column{name: "name", nullable: true}
           },
           fields_lookup: %{"users" => %{"users/id" => true, "users/name" => true}},
           tables: %{"users" => %Table{comment: "Our users table", name: "users"}}
@@ -73,10 +73,10 @@ defmodule Maxo.Conf.BackendTest do
       auto_assert(
         %State{
           fields: %{
-            "teams/id" => %Field{name: "id", primary: true, type: "int"},
-            "teams/name" => %Field{name: "name"},
-            "users/id" => %Field{name: "id", primary: true, type: "int"},
-            "users/name" => %Field{name: "name"}
+            "teams/id" => %Column{name: "id", primary: true, type: "int"},
+            "teams/name" => %Column{name: "name"},
+            "users/id" => %Column{name: "id", primary: true, type: "int"},
+            "users/name" => %Column{name: "name"}
           },
           fields_lookup: %{
             "teams" => %{"teams/id" => true, "teams/name" => true},
@@ -111,7 +111,7 @@ defmodule Maxo.Conf.BackendTest do
       auto_assert(
         %State{
           contexts: %{"users" => %Context{name: "users"}},
-          fields: %{"users/id" => %Field{name: "id", primary: true, type: "int"}},
+          fields: %{"users/id" => %Column{name: "id", primary: true, type: "int"}},
           fields_lookup: %{"users" => %{"users/id" => true}},
           tables: %{"users" => %Table{name: "users"}}
         } <- b
