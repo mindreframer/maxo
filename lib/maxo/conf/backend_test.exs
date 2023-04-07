@@ -44,8 +44,11 @@ defmodule Maxo.Conf.BackendTest do
 
       auto_assert(
         %State{
-          fields: %{"users/name" => %Field{name: "name", nullable: true}},
-          fields_lookup: %{"users" => %{"name" => true}},
+          fields: %{
+            "users/id" => %Field{name: "id", primary: true, type: "int"},
+            "users/name" => %Field{name: "name", nullable: true}
+          },
+          fields_lookup: %{"users" => %{"id" => true, "name" => true}},
           tables: %{"users" => %Table{comment: "Our users table", name: "users"}}
         } <- b
       )
@@ -69,8 +72,16 @@ defmodule Maxo.Conf.BackendTest do
 
       auto_assert(
         %State{
-          fields: %{"teams/name" => %Field{name: "name"}, "users/name" => %Field{name: "name"}},
-          fields_lookup: %{"teams" => %{"name" => true}, "users" => %{"name" => true}},
+          fields: %{
+            "teams/id" => %Field{name: "id", primary: true, type: "int"},
+            "teams/name" => %Field{name: "name"},
+            "users/id" => %Field{name: "id", primary: true, type: "int"},
+            "users/name" => %Field{name: "name"}
+          },
+          fields_lookup: %{
+            "teams" => %{"id" => true, "name" => true},
+            "users" => %{"id" => true, "name" => true}
+          },
           relations: %{
             "teams/users_id > users/id - o2m " => %Relation{
               cardinality: "o2m",
@@ -100,7 +111,7 @@ defmodule Maxo.Conf.BackendTest do
       auto_assert(
         %State{
           contexts: %{"users" => %Context{name: "users"}},
-          fields: %{"users/id" => %Field{name: "id", primary: true}},
+          fields: %{"users/id" => %Field{name: "id", primary: true, type: "int"}},
           fields_lookup: %{"users" => %{"id" => true}},
           tables: %{"users" => %Table{name: "users"}}
         } <- b

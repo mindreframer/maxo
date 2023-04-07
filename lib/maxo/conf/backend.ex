@@ -15,7 +15,11 @@ defmodule Maxo.Conf.Backend do
     item = Table.make!(%{name: name, comment: comment})
     state = Value.insert(state, "tables.#{name}", item)
 
-    state = add_field(state, name, %{name: "id", primary: true}) |> Maxo.Conf.Util.state!()
+    state =
+      state
+      |> add_field(name, %{name: "id", primary: true, type: "int"})
+      |> Maxo.Conf.Util.state!()
+
     ok(state)
   end
 
