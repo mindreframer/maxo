@@ -40,7 +40,7 @@ defmodule Maxo.Conf.Backend do
     [src_table, src_field] = String.split(src, "/")
     [dest_table, dest_field] = String.split(dest, "/")
 
-    name = "#{src} > #{dest} : #{cardinality} "
+    id = "#{src} > #{dest} : #{cardinality}"
 
     item =
       Relation.make!(%{
@@ -53,13 +53,19 @@ defmodule Maxo.Conf.Backend do
 
     state =
       state
-      |> Value.insert("relations.#{name}", item)
+      |> Value.insert("relations.#{id}", item)
+      |> add_relations_lookup(src_table, id, "out")
+      |> add_relations_lookup(dest_table, id, "in")
 
     ok(state)
   end
 
   defp add_columns_lookup(state = %State{}, table, name) do
     Value.insert(state, "columns_lookup.#{table}.#{name}", true)
+  end
+
+  defp add_relations_lookup(state = %State{}, table, name, type) do
+    Value.insert(state, "relations_lookup.#{table}.#{name}", type)
   end
 
   defp ok(state), do: {state, :ok}
