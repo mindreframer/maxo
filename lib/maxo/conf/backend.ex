@@ -3,7 +3,6 @@ defmodule Maxo.Conf.Backend do
 
   alias __MODULE__
   alias Maxo.Conf.{Context, Field, Table}
-  alias Maxo.Conf.Util
 
   def init() do
     %Backend{}
@@ -12,21 +11,13 @@ defmodule Maxo.Conf.Backend do
   def add_context(backend = %Backend{}, name, comment \\ "") do
     item = Context.make!(%{name: name, comment: comment})
     backend = Value.insert(backend, "contexts.#{name}", item)
-    Util.ok(backend)
-  end
-
-  def add_context!(backend = %Backend{}, name, comment \\ "") do
-    add_context(backend, name, comment) |> Util.ok!()
+    ok(backend)
   end
 
   def add_table(backend = %Backend{}, name, comment \\ "") do
     item = Table.make!(%{name: name, comment: comment})
     backend = Value.insert(backend, "tables.#{name}", item)
-    Util.ok(backend)
-  end
-
-  def add_table!(backend = %Backend{}, name, comment \\ "") do
-    add_table(backend, name, comment) |> Util.ok!()
+    ok(backend)
   end
 
   def add_field(backend = %Backend{}, table, args) do
@@ -39,14 +30,14 @@ defmodule Maxo.Conf.Backend do
       |> Value.insert("fields.#{id}", item)
       |> add_fields_lookup(table, name)
 
-    Util.ok(backend)
-  end
-
-  def add_field!(backend = %Backend{}, table, args) do
-    add_field(backend, table, args) |> Util.ok!()
+    ok(backend)
   end
 
   defp add_fields_lookup(backend = %Backend{}, table, name) do
     Value.insert(backend, "fields_lookup.#{table}.#{name}", true)
   end
+
+  defp ok(state), do: {state, :ok}
+  # defp ok(state, res), do: {state, {:ok, res}}
+  # defp error(state, res), do: {state, {:error, res}}
 end

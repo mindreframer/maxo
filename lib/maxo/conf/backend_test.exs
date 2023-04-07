@@ -9,19 +9,19 @@ defmodule Maxo.Conf.BackendTest do
       b =
         Backend.init()
         |> Backend.add_context("users", "Our users logic")
+        |> Util.state!()
 
       auto_assert(
-        {:ok,
-         %Backend{
-           contexts: %{"users" => %Maxo.Conf.Context{comment: "Our users logic", name: "users"}}
-         }} <- b
+        %Backend{
+          contexts: %{"users" => %Maxo.Conf.Context{comment: "Our users logic", name: "users"}}
+        } <- b
       )
     end
   end
 
   describe "add_table" do
     test "works" do
-      b = Backend.init() |> Backend.add_table!("users", "Our users table")
+      b = Backend.init() |> Backend.add_table("users", "Our users table") |> Util.state!()
 
       auto_assert(
         %Backend{
@@ -35,8 +35,10 @@ defmodule Maxo.Conf.BackendTest do
     test "works" do
       b =
         Backend.init()
-        |> Backend.add_table!("users", "Our users table")
-        |> Backend.add_field!("users", %{name: "name", type: "string", nullable: true})
+        |> Backend.add_table("users", "Our users table")
+        |> Util.state!()
+        |> Backend.add_field("users", %{name: "name", type: "string", nullable: true})
+        |> Util.state!()
 
       auto_assert(
         %Backend{
@@ -54,8 +56,10 @@ defmodule Maxo.Conf.BackendTest do
     test "works" do
       b =
         Backend.init()
-        |> Backend.add_context!("users")
-        |> Backend.add_table!("users")
+        |> Backend.add_context("users")
+        |> Util.state!()
+        |> Backend.add_table("users")
+        |> Util.state!()
 
       auto_assert(
         %Backend{
