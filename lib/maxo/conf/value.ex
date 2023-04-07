@@ -1,4 +1,4 @@
-defmodule Value do
+defmodule Maxo.Conf.Value do
   @moduledoc """
     Value
   """

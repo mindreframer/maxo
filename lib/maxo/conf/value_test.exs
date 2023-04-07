@@ -1,6 +1,8 @@
 defmodule ValueTest do
   use ExUnit.Case
 
+  alias Maxo.Conf.Value
+
   describe "Value.get" do
     test "get required value in plain key atom map" do
       scope = %{a: 1, b: 2, c: 3}

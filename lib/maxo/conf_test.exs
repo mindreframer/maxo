@@ -76,11 +76,15 @@ defmodule Maxo.ConfTest do
             "users" => %{"users/email" => true, "users/id" => true}
           },
           relations: %{
-            "teams/owner_id > users/id : o2o " => %Relation{
+            "teams/owner_id > users/id : o2o" => %Relation{
               dest_table: "users",
               src_field: "owner_id",
               src_table: "teams"
             }
+          },
+          relations_lookup: %{
+            "teams" => %{"teams/owner_id > users/id : o2o" => "out"},
+            "users" => %{"teams/owner_id > users/id : o2o" => "in"}
           },
           tables: %{"teams" => %Table{name: "teams"}, "users" => %Table{name: "users"}}
         } <- b

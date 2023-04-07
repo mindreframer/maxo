@@ -1,5 +1,7 @@
 defmodule Maxo.Conf.Backend do
   alias Maxo.Conf.{Context, Column, Table, State, Relation}
+  alias Maxo.Conf.Value
+  alias Maxo.Conf.Naming
 
   def init() do
     %State{}
@@ -26,7 +28,7 @@ defmodule Maxo.Conf.Backend do
   def add_column(state = %State{}, table, args) do
     item = Column.make!(args)
     name = Map.get(args, :name) || Map.fetch!(args, "name")
-    id = "#{table}/#{name}"
+    id = Naming.column(table, name)
 
     state =
       state
