@@ -40,7 +40,7 @@ defmodule Maxo.Conf.Backend do
     [src_table, src_field] = String.split(src, "/")
     [dest_table, dest_field] = String.split(dest, "/")
 
-    name = "#{src} > #{dest} - #{cardinality} "
+    name = "#{src} -> #{dest} :: #{cardinality} "
 
     item =
       Relation.make!(%{

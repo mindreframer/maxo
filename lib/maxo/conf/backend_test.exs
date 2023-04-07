@@ -83,7 +83,7 @@ defmodule Maxo.Conf.BackendTest do
             "users" => %{"id" => true, "name" => true}
           },
           relations: %{
-            "teams/users_id > users/id - o2m " => %Relation{
+            "teams/users_id -> users/id :: o2m " => %Relation{
               cardinality: "o2m",
               dest_table: "users",
               src_field: "users_id",
