@@ -23,8 +23,8 @@ defmodule Maxo.MixProject do
   defp deps do
     [
       {:virtfs, "~> 0.1.3"},
-      {:parameter, "~> 0.12"},
-      {:schematic, github: "mhanberg/schematic"},
+      {:construct, github: "ExpressApp/construct"},
+      {:pathex, "~> 2.5"},
       {:test_iex, github: "mindreframer/test_iex", only: [:test]},
       {:mneme, "~> 0.2.7", only: [:test]}
     ]
