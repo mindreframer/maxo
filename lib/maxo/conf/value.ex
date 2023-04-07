@@ -75,12 +75,6 @@ defmodule Value do
           if is_list(value) do
             value
             |> Enum.with_index()
-            # |> Flow.from_enumerable(max_demand: 25)
-            # |> Flow.map(fn {idx, item} ->
-            #   {idx, scope_deep |> Enum.at(idx) |> insert(tail, item, idx_r)}
-            # end)
-            # |> Flow.partition()
-            # |> Flow.reduce(fn -> [] end, fn item, acc -> acc ++ [item] end)
             |> Enum.map(fn {item, idx} ->
               {idx, scope_deep |> Enum.at(idx) |> insert(tail, item, idx_r)}
             end)
