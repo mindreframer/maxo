@@ -17,10 +17,12 @@ defmodule Maxo.Conf.Query do
     t = MapValue.get(conf, "tables.#{name}")
     columns = columns_for_table(conf, name)
     relations = relations_for_table(conf, name)
+    indexes = indexes_for_table(conf, name)
 
     Value.init(t)
     |> Map.put(:columns, columns)
     |> Map.put(:relations, relations)
+    |> Map.put(:indexes, indexes)
   end
 
   def get_column(conf, table, name) do
@@ -42,6 +44,12 @@ defmodule Maxo.Conf.Query do
     values = MapValue.get(conf, "private.relations_lookup.#{table}")
     keys = (values || %{}) |> Map.keys()
     Enum.map(keys, fn key -> MapValue.get(conf, "relations.#{key}") |> Value.init() end)
+  end
+
+  def indexes_for_table(conf, table) do
+    values = MapValue.get(conf, "private.indexes_lookup.#{table}")
+    keys = (values || %{}) |> Map.keys()
+    Enum.map(keys, fn key -> MapValue.get(conf, "indexes.#{key}") |> Value.init() end)
   end
 
   defp resolve_conf(conf) when is_pid(conf) do

@@ -62,6 +62,7 @@ defmodule Maxo.Conf.Backend do
     state =
       state
       |> MapValue.insert("indexes.#{name}", item)
+      |> add_indexes_lookup(table, name)
 
     ok(state)
   end
@@ -92,6 +93,10 @@ defmodule Maxo.Conf.Backend do
 
   defp add_columns_lookup(state = %State{}, table, name) do
     MapValue.insert(state, "private.columns_lookup.#{table}.#{name}", true)
+  end
+
+  defp add_indexes_lookup(state = %State{}, table, name) do
+    MapValue.insert(state, "private.indexes_lookup.#{table}.#{name}", true)
   end
 
   defp add_relations_lookup(state = %State{}, table, name, type) do

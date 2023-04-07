@@ -134,7 +134,7 @@ defmodule Maxo.ConfTest do
             columns_lookup: %{
               "users" => %{"users/city" => true, "users/email" => true, "users/id" => true}
             },
-            indexes_lookup: %{},
+            indexes_lookup: %{"users" => %{"users_email_city_index" => true}},
             relations_lookup: %{}
           },
           tables: %{"users" => %Table{name: "users"}}

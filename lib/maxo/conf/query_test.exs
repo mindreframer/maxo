@@ -41,6 +41,15 @@ defmodule Maxo.Conf.QueryTest do
             }
           ],
           comment: "",
+          indexes: [
+            %{
+              columns: ["email"],
+              comment: "",
+              name: "users_email_index",
+              table: "users",
+              unique: true
+            }
+          ],
           name: "users",
           relations: [
             %{
@@ -81,6 +90,22 @@ defmodule Maxo.Conf.QueryTest do
             }
           ],
           comment: "",
+          indexes: [
+            %{
+              columns: ["teams_id"],
+              comment: "",
+              name: "memberships_teams_id_index",
+              table: "memberships",
+              unique: false
+            },
+            %{
+              columns: ["users_id"],
+              comment: "",
+              name: "memberships_users_id_index",
+              table: "memberships",
+              unique: false
+            }
+          ],
           name: "memberships",
           relations: [
             %{
@@ -119,6 +144,7 @@ defmodule Maxo.Conf.QueryTest do
     Maxo.Conf.add_table!(conf, "users")
     Maxo.Conf.add_column!(conf, "users", %{name: "name", type: "string", nullable: false})
     Maxo.Conf.add_column!(conf, "users", %{name: "email", type: "string", nullable: false})
+    Maxo.Conf.add_index!(conf, "users", ["email"], unique: true)
 
     Maxo.Conf.add_column!(conf, "users", %{name: "password_hash", type: "string", nullable: false})
 
@@ -128,6 +154,8 @@ defmodule Maxo.Conf.QueryTest do
     Maxo.Conf.add_table!(conf, "memberships")
     Maxo.Conf.add_column!(conf, "memberships", %{name: "users_id", type: "int", nullable: false})
     Maxo.Conf.add_column!(conf, "memberships", %{name: "teams_id", type: "int", nullable: false})
+    Maxo.Conf.add_index!(conf, "memberships", ["users_id"])
+    Maxo.Conf.add_index!(conf, "memberships", ["teams_id"])
 
     ## relations can be executed after all tables, that simplifies DB schema maintenance
     Maxo.Conf.add_relation!(conf, "memberships/users_id", "users/id", "o2m")
