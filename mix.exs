@@ -26,7 +26,7 @@ defmodule Maxo.MixProject do
       {:construct, github: "ExpressApp/construct"},
       {:pathex, "~> 2.5"},
       {:test_iex, github: "mindreframer/test_iex", only: [:test]},
-      {:mneme, "~> 0.2.7", only: [:test]}
+      {:mneme, "~> 0.3.0-rc.0", only: [:test]}
     ]
   end
 end
