@@ -1,4 +1,4 @@
-defmodule Maxo.Conf.Server do
+defmodule Maxo.Conf do
   use GenServer
   alias Maxo.Conf.State
   alias Maxo.Conf.Backend
