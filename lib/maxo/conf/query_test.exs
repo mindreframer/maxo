@@ -8,7 +8,7 @@ defmodule Maxo.Conf.QueryTest do
   setup :setup_conf
 
   describe "get_table" do
-    test "works", %{conf: conf} do
+    test "users - works", %{conf: conf} do
       res = Query.get_table(conf, "users")
 
       auto_assert(
@@ -43,6 +43,54 @@ defmodule Maxo.Conf.QueryTest do
           comment: "",
           name: "users",
           relations: [
+            %{
+              cardinality: "o2m",
+              comment: "",
+              dest_column: "id",
+              dest_table: "users",
+              src_column: "users_id",
+              src_table: "memberships"
+            }
+          ]
+        } <- res
+      )
+    end
+
+    test "memberships - works", %{conf: conf} do
+      res = Query.get_table(conf, "memberships")
+
+      auto_assert(
+        %{
+          columns: [
+            %{comment: "", name: "id", nullable: false, order: 1, primary: true, type: "int"},
+            %{
+              comment: "",
+              name: "users_id",
+              nullable: false,
+              order: 2,
+              primary: false,
+              type: "int"
+            },
+            %{
+              comment: "",
+              name: "teams_id",
+              nullable: false,
+              order: 3,
+              primary: false,
+              type: "int"
+            }
+          ],
+          comment: "",
+          name: "memberships",
+          relations: [
+            %{
+              cardinality: "o2m",
+              comment: "",
+              dest_column: "id",
+              dest_table: "teams",
+              src_column: "teams_id",
+              src_table: "memberships"
+            },
             %{
               cardinality: "o2m",
               comment: "",
