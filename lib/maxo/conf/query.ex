@@ -31,7 +31,7 @@ defmodule Maxo.Conf.Query do
   end
 
   def columns_for_table(conf, table) do
-    values = MapValue.get(conf, "columns_lookup.#{table}")
+    values = MapValue.get(conf, "private.columns_lookup.#{table}")
     keys = (values || %{}) |> Map.keys()
 
     Enum.map(keys, fn key -> MapValue.get(conf, "columns.#{key}") |> Value.init() end)
@@ -39,7 +39,7 @@ defmodule Maxo.Conf.Query do
   end
 
   def relations_for_table(conf, table) do
-    values = MapValue.get(conf, "relations_lookup.#{table}")
+    values = MapValue.get(conf, "private.relations_lookup.#{table}")
     keys = (values || %{}) |> Map.keys()
     Enum.map(keys, fn key -> MapValue.get(conf, "relations.#{key}") |> Value.init() end)
   end

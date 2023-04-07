@@ -91,20 +91,20 @@ defmodule Maxo.Conf.Backend do
   end
 
   defp add_columns_lookup(state = %State{}, table, name) do
-    MapValue.insert(state, "columns_lookup.#{table}.#{name}", true)
+    MapValue.insert(state, "private.columns_lookup.#{table}.#{name}", true)
   end
 
   defp add_relations_lookup(state = %State{}, table, name, type) do
-    MapValue.insert(state, "relations_lookup.#{table}.#{name}", type)
+    MapValue.insert(state, "private.relations_lookup.#{table}.#{name}", type)
   end
 
   def inc_columns_counter(state = %State{}, table) do
     value = get_columns_counter(state, table)
-    MapValue.insert(state, "columns_counter.#{table}", value + 1)
+    MapValue.insert(state, "private.columns_counter.#{table}", value + 1)
   end
 
   def get_columns_counter(state = %State{}, table) do
-    MapValue.get(state, "columns_counter.#{table}") || 1
+    MapValue.get(state, "private.columns_counter.#{table}") || 1
   end
 
   defp ok(state), do: {state, :ok}

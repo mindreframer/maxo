@@ -28,8 +28,13 @@ defmodule Maxo.ConfTest do
 
       auto_assert(
         %State{
-          columns: %{"users/id" => %Column{name: "id", primary: true, type: "int"}},
-          columns_lookup: %{"users" => %{"users/id" => true}},
+          columns: %{"users/id" => %Column{name: "id", order: 1, primary: true, type: "int"}},
+          private: %{
+            columns_counter: %{"users" => 2},
+            columns_lookup: %{"users" => %{"users/id" => true}},
+            indexes_lookup: %{},
+            relations_lookup: %{}
+          },
           tables: %{"users" => %Table{comment: "our users table", name: "users"}}
         } <- b
       )
@@ -44,8 +49,13 @@ defmodule Maxo.ConfTest do
 
       auto_assert(
         %State{
-          columns: %{"users/email" => %Column{name: "email"}},
-          columns_lookup: %{"users" => %{"users/email" => true}}
+          columns: %{"users/email" => %Column{name: "email", order: 1}},
+          private: %{
+            columns_counter: %{"users" => 2},
+            columns_lookup: %{"users" => %{"users/email" => true}},
+            indexes_lookup: %{},
+            relations_lookup: %{}
+          }
         } <- b
       )
     end
@@ -65,15 +75,23 @@ defmodule Maxo.ConfTest do
       auto_assert(
         %State{
           columns: %{
-            "teams/id" => %Column{name: "id", primary: true, type: "int"},
-            "teams/name" => %Column{name: "name"},
-            "teams/owner_id" => %Column{name: "owner_id", type: "int"},
-            "users/email" => %Column{name: "email"},
-            "users/id" => %Column{name: "id", primary: true, type: "int"}
+            "teams/id" => %Column{name: "id", order: 1, primary: true, type: "int"},
+            "teams/name" => %Column{name: "name", order: 2},
+            "teams/owner_id" => %Column{name: "owner_id", order: 3, type: "int"},
+            "users/email" => %Column{name: "email", order: 2},
+            "users/id" => %Column{name: "id", order: 1, primary: true, type: "int"}
           },
-          columns_lookup: %{
-            "teams" => %{"teams/id" => true, "teams/name" => true, "teams/owner_id" => true},
-            "users" => %{"users/email" => true, "users/id" => true}
+          private: %{
+            columns_counter: %{"teams" => 4, "users" => 3},
+            columns_lookup: %{
+              "teams" => %{"teams/id" => true, "teams/name" => true, "teams/owner_id" => true},
+              "users" => %{"users/email" => true, "users/id" => true}
+            },
+            indexes_lookup: %{},
+            relations_lookup: %{
+              "teams" => %{"teams/owner_id > users/id : o2o" => "out"},
+              "users" => %{"teams/owner_id > users/id : o2o" => "in"}
+            }
           },
           relations: %{
             "teams/owner_id > users/id : o2o" => %Relation{
@@ -81,10 +99,6 @@ defmodule Maxo.ConfTest do
               src_column: "owner_id",
               src_table: "teams"
             }
-          },
-          relations_lookup: %{
-            "teams" => %{"teams/owner_id > users/id : o2o" => "out"},
-            "users" => %{"teams/owner_id > users/id : o2o" => "in"}
           },
           tables: %{"teams" => %Table{name: "teams"}, "users" => %Table{name: "users"}}
         } <- b
@@ -108,16 +122,20 @@ defmodule Maxo.ConfTest do
             "users/email" => %Column{name: "email", order: 2},
             "users/id" => %Column{name: "id", order: 1, primary: true, type: "int"}
           },
-          columns_counter: %{"users" => 4},
-          columns_lookup: %{
-            "users" => %{"users/city" => true, "users/email" => true, "users/id" => true}
-          },
           indexes: %{
             "users_email_city_index" => %Maxo.Conf.Index{
               columns: ["email", "city"],
               name: "users_email_city_index",
               table: "users"
             }
+          },
+          private: %{
+            columns_counter: %{"users" => 4},
+            columns_lookup: %{
+              "users" => %{"users/city" => true, "users/email" => true, "users/id" => true}
+            },
+            indexes_lookup: %{},
+            relations_lookup: %{}
           },
           tables: %{"users" => %Table{name: "users"}}
         } <- b
