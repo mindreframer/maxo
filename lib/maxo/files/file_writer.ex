@@ -5,16 +5,18 @@ defmodule Maxo.Files.FileWriter do
 
   alias Maxo.Files.FileReader
 
+  @initial %{lines: [], indent: 0}
+
   @name __MODULE__
   use Agent
-  def start_link(), do: start_link([])
+  def start_link(), do: start_link(@initial)
 
-  def start_link(_opts) do
-    Agent.start_link(fn -> [] end, name: @name)
+  def start_link(opts) do
+    Agent.start_link(fn -> opts end, name: @name)
   end
 
   def get() do
-    Agent.get(@name, fn content -> content |> Enum.reverse() end)
+    Agent.get(@name, fn %{lines: lines} -> lines |> Enum.reverse() end)
   end
 
   # noop for nil
@@ -23,7 +25,24 @@ defmodule Maxo.Files.FileWriter do
   end
 
   def put(line) do
-    Agent.update(@name, fn content -> [line | content] end)
+    Agent.update(@name, fn state ->
+      %{state | lines: [indented(line, state.indent) | state.lines]}
+    end)
+  end
+
+  def get_indent() do
+    Agent.get(@name, fn %{indent: indent} -> indent end)
+  end
+
+  def set_indent(indent) do
+    Agent.update(@name, fn state -> %{state | indent: indent} end)
+  end
+
+  def with_indent(indent, fun) do
+    orig = get_indent()
+    set_indent(orig + indent)
+    fun.()
+    set_indent(orig)
   end
 
   # reading for files with scope to taxml2clips folder
@@ -48,6 +67,10 @@ defmodule Maxo.Files.FileWriter do
   end
 
   def reset() do
-    Agent.update(@name, fn _content -> [] end)
+    Agent.update(@name, fn _content -> @initial end)
+  end
+
+  defp indented(line, indent) do
+    ~s|#{String.duplicate(" ", indent)}#{line}|
   end
 end
