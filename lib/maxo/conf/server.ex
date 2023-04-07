@@ -44,6 +44,10 @@ defmodule Maxo.Conf.Server do
     handle_error(add_field(pid, name, args), {:add_field!, name, args})
   end
 
+  def get_conf(pid) do
+    GenServer.call(pid, {:get_conf})
+  end
+
   ###
   ### GEN SERVER CALLBACKS
   ###
@@ -52,6 +56,24 @@ defmodule Maxo.Conf.Server do
   def handle_call({:add_context, name, comment}, _from, %State{} = state) do
     {state, res} = Backend.add_context(state, name, comment)
     {:reply, res, state}
+  end
+
+  @impl true
+  def handle_call({:add_table, name, comment}, _from, %State{} = state) do
+    {state, res} = Backend.add_table(state, name, comment)
+    {:reply, res, state}
+  end
+
+  @impl true
+  def handle_call({:add_field, name, args}, _from, %State{} = state) do
+    {state, res} = Backend.add_field(state, name, args)
+    {:reply, res, state}
+  end
+
+  ### Management / Debug
+  @impl true
+  def handle_call({:get_conf}, _from, %State{} = state) do
+    {:reply, state, state}
   end
 
   defp handle_error(res, args) do
