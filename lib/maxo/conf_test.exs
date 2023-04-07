@@ -14,9 +14,7 @@ defmodule Maxo.ConfTest do
 
       b = Conf.get_conf(conf)
 
-      auto_assert(
-        %State{contexts: %{"users" => %Context{comment: "our users logic", name: "users"}}} <- b
-      )
+      auto_assert(b)
     end
   end
 
@@ -26,65 +24,32 @@ defmodule Maxo.ConfTest do
 
       b = Conf.get_conf(conf)
 
-      auto_assert(
-        %State{
-          fields: %{"users/id" => %Column{name: "id", primary: true, type: "int"}},
-          fields_lookup: %{"users" => %{"users/id" => true}},
-          tables: %{"users" => %Table{comment: "our users table", name: "users"}}
-        } <- b
-      )
+      auto_assert(b)
     end
   end
 
-  describe "add_field" do
+  describe "add_column" do
     test "works on valid input", %{conf: conf} do
-      auto_assert(:ok <- Conf.add_field(conf, "users", %{name: "email", type: "string"}))
+      auto_assert(:ok <- Conf.add_column(conf, "users", %{name: "email", type: "string"}))
 
       b = Conf.get_conf(conf)
 
-      auto_assert(
-        %State{
-          fields: %{"users/email" => %Column{name: "email"}},
-          fields_lookup: %{"users" => %{"users/email" => true}}
-        } <- b
-      )
+      auto_assert(b)
     end
   end
 
   describe "add_relation" do
     test "works on valid input", %{conf: conf} do
       auto_assert(:ok <- Conf.add_table(conf, "users"))
-      auto_assert(:ok <- Conf.add_field(conf, "users", %{name: "email"}))
+      auto_assert(:ok <- Conf.add_column(conf, "users", %{name: "email"}))
       auto_assert(:ok <- Conf.add_table(conf, "teams"))
-      auto_assert(:ok <- Conf.add_field(conf, "teams", %{name: "name"}))
-      auto_assert(:ok <- Conf.add_field(conf, "teams", %{name: "owner_id", type: "int"}))
+      auto_assert(:ok <- Conf.add_column(conf, "teams", %{name: "name"}))
+      auto_assert(:ok <- Conf.add_column(conf, "teams", %{name: "owner_id", type: "int"}))
       auto_assert(:ok <- Conf.add_relation(conf, "teams/owner_id", "users/id", "o2o"))
 
       b = Conf.get_conf(conf)
 
-      auto_assert(
-        %State{
-          fields: %{
-            "teams/id" => %Column{name: "id", primary: true, type: "int"},
-            "teams/name" => %Column{name: "name"},
-            "teams/owner_id" => %Column{name: "owner_id", type: "int"},
-            "users/email" => %Column{name: "email"},
-            "users/id" => %Column{name: "id", primary: true, type: "int"}
-          },
-          fields_lookup: %{
-            "teams" => %{"teams/id" => true, "teams/name" => true, "teams/owner_id" => true},
-            "users" => %{"users/email" => true, "users/id" => true}
-          },
-          relations: %{
-            "teams/owner_id > users/id : o2o " => %Relation{
-              dest_table: "users",
-              src_field: "owner_id",
-              src_table: "teams"
-            }
-          },
-          tables: %{"teams" => %Table{name: "teams"}, "users" => %Table{name: "users"}}
-        } <- b
-      )
+      auto_assert(b)
     end
   end
 

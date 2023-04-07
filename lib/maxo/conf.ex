@@ -40,12 +40,12 @@ defmodule Maxo.Conf do
     handle_error(add_table(pid, name, comment), {:add_table!, name, comment})
   end
 
-  def add_field(pid, name, args) do
-    GenServer.call(pid, {:add_field, name, args})
+  def add_column(pid, name, args) do
+    GenServer.call(pid, {:add_column, name, args})
   end
 
-  def add_field!(pid, name, args) do
-    handle_error(add_field(pid, name, args), {:add_field!, name, args})
+  def add_column!(pid, name, args) do
+    handle_error(add_column(pid, name, args), {:add_column!, name, args})
   end
 
   def add_relation(pid, src, dest, cardinality \\ "o2m") do
@@ -80,8 +80,8 @@ defmodule Maxo.Conf do
   end
 
   @impl true
-  def handle_call({:add_field, name, args}, _from, %State{} = state) do
-    {state, res} = Backend.add_field(state, name, args)
+  def handle_call({:add_column, name, args}, _from, %State{} = state) do
+    {state, res} = Backend.add_column(state, name, args)
     {:reply, res, state}
   end
 

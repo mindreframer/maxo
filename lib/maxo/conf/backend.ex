@@ -17,21 +17,21 @@ defmodule Maxo.Conf.Backend do
 
     state =
       state
-      |> add_field(name, %{name: "id", primary: true, type: "int"})
+      |> add_column(name, %{name: "id", primary: true, type: "int"})
       |> Maxo.Conf.Util.state!()
 
     ok(state)
   end
 
-  def add_field(state = %State{}, table, args) do
+  def add_column(state = %State{}, table, args) do
     item = Column.make!(args)
     name = Map.get(args, :name) || Map.fetch!(args, "name")
     id = "#{table}/#{name}"
 
     state =
       state
-      |> Value.insert("fields.#{id}", item)
-      |> add_fields_lookup(table, id)
+      |> Value.insert("columns.#{id}", item)
+      |> add_columns_lookup(table, id)
 
     ok(state)
   end
@@ -58,8 +58,8 @@ defmodule Maxo.Conf.Backend do
     ok(state)
   end
 
-  defp add_fields_lookup(state = %State{}, table, name) do
-    Value.insert(state, "fields_lookup.#{table}.#{name}", true)
+  defp add_columns_lookup(state = %State{}, table, name) do
+    Value.insert(state, "columns_lookup.#{table}.#{name}", true)
   end
 
   defp ok(state), do: {state, :ok}

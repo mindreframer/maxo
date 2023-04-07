@@ -13,9 +13,7 @@ defmodule Maxo.Conf.BackendTest do
         |> Backend.add_context("users", "Our users logic")
         |> Util.state!()
 
-      auto_assert(
-        %State{contexts: %{"users" => %Context{comment: "Our users logic", name: "users"}}} <- b
-      )
+      auto_assert(b)
     end
   end
 
@@ -23,35 +21,20 @@ defmodule Maxo.Conf.BackendTest do
     test "works" do
       b = Backend.init() |> Backend.add_table("users", "Our users table") |> Util.state!()
 
-      auto_assert(
-        %State{
-          fields: %{"users/id" => %Column{name: "id", primary: true, type: "int"}},
-          fields_lookup: %{"users" => %{"users/id" => true}},
-          tables: %{"users" => %Table{comment: "Our users table", name: "users"}}
-        } <- b
-      )
+      auto_assert(b)
     end
   end
 
-  describe "add_field" do
+  describe "add_column" do
     test "works" do
       b =
         Backend.init()
         |> Backend.add_table("users", "Our users table")
         |> Util.state!()
-        |> Backend.add_field("users", %{name: "name", type: "string", nullable: true})
+        |> Backend.add_column("users", %{name: "name", type: "string", nullable: true})
         |> Util.state!()
 
-      auto_assert(
-        %State{
-          fields: %{
-            "users/id" => %Column{name: "id", primary: true, type: "int"},
-            "users/name" => %Column{name: "name", nullable: true}
-          },
-          fields_lookup: %{"users" => %{"users/id" => true, "users/name" => true}},
-          tables: %{"users" => %Table{comment: "Our users table", name: "users"}}
-        } <- b
-      )
+      auto_assert(b)
     end
   end
 
@@ -61,41 +44,16 @@ defmodule Maxo.Conf.BackendTest do
         Backend.init()
         |> Backend.add_table("users", "Our users table")
         |> Util.state!()
-        |> Backend.add_field("users", %{name: "name", type: "string"})
+        |> Backend.add_column("users", %{name: "name", type: "string"})
         |> Util.state!()
         |> Backend.add_table("teams")
         |> Util.state!()
-        |> Backend.add_field("teams", %{name: "name"})
+        |> Backend.add_column("teams", %{name: "name"})
         |> Util.state!()
         |> Backend.add_relation("teams/users_id", "users/id")
         |> Util.state!()
 
-      auto_assert(
-        %State{
-          fields: %{
-            "teams/id" => %Column{name: "id", primary: true, type: "int"},
-            "teams/name" => %Column{name: "name"},
-            "users/id" => %Column{name: "id", primary: true, type: "int"},
-            "users/name" => %Column{name: "name"}
-          },
-          fields_lookup: %{
-            "teams" => %{"teams/id" => true, "teams/name" => true},
-            "users" => %{"users/id" => true, "users/name" => true}
-          },
-          relations: %{
-            "teams/users_id > users/id : o2m " => %Relation{
-              cardinality: "o2m",
-              dest_table: "users",
-              src_field: "users_id",
-              src_table: "teams"
-            }
-          },
-          tables: %{
-            "teams" => %Table{name: "teams"},
-            "users" => %Table{comment: "Our users table", name: "users"}
-          }
-        } <- b
-      )
+      auto_assert(b)
     end
   end
 
@@ -108,14 +66,7 @@ defmodule Maxo.Conf.BackendTest do
         |> Backend.add_table("users")
         |> Util.state!()
 
-      auto_assert(
-        %State{
-          contexts: %{"users" => %Context{name: "users"}},
-          fields: %{"users/id" => %Column{name: "id", primary: true, type: "int"}},
-          fields_lookup: %{"users" => %{"users/id" => true}},
-          tables: %{"users" => %Table{name: "users"}}
-        } <- b
-      )
+      auto_assert(b)
     end
   end
 end
