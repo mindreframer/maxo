@@ -130,7 +130,7 @@ defmodule Maxo.Conf.QueryTest do
     end
   end
 
-  def setup_conf(_) do
+  defp setup_conf(_) do
     {:ok, conf} = Maxo.Conf.start_link()
 
     Maxo.Conf.add_context!(conf, "users")
