@@ -1,6 +1,6 @@
 defmodule Maxo.ProjectTest do
   use ExUnit.Case, async: true
-  use MnemeDefauls
+  use MnemeDefaults
 
   alias Maxo.Project
 

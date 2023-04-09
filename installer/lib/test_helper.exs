@@ -1,7 +1,7 @@
 Mneme.start(restart: true)
 ExUnit.start(trace: true)
 
-defmodule MnemeDefauls do
+defmodule MnemeDefaults do
   defmacro __using__(_) do
     quote do
       use Mneme, action: :accept, default_pattern: :last, force_update: false

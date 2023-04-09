@@ -1,6 +1,6 @@
 defmodule Maxo.Conf.QueryTest do
   use ExUnit.Case, async: true
-  use MnemeDefauls
+  use MnemeDefaults
   alias Maxo.Conf.Query
 
   setup :setup_conf

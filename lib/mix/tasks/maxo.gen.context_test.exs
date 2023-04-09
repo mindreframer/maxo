@@ -1,6 +1,6 @@
 defmodule Mix.Tasks.Maxo.Gen.ContextTest do
   use ExUnit.Case
-  use MnemeDefauls
+  use MnemeDefaults
 
   alias Mix.Tasks.Maxo.Gen
 

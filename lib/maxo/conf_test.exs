@@ -1,6 +1,6 @@
 defmodule Maxo.ConfTest do
   use ExUnit.Case, async: true
-  use MnemeDefauls
+  use MnemeDefaults
 
   alias Maxo.Conf
   alias Maxo.Conf.Column
