@@ -1,6 +1,6 @@
 defmodule Maxo.Generator do
   @moduledoc false
-  import Virtfs.Mix.Generator
+  # import Virtfs.Mix.Generator
   alias Maxo.Project
 
   @callback prepare_project(Project.t()) :: Project.t()
