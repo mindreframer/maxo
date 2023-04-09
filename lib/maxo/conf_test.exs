@@ -3,8 +3,11 @@ defmodule Maxo.ConfTest do
   use MnemeDefauls
 
   alias Maxo.Conf
-  alias Maxo.Conf.Util
-  alias Maxo.Conf.{Context, Column, Table, State, Relation}
+  alias Maxo.Conf.Column
+  alias Maxo.Conf.Context
+  alias Maxo.Conf.Relation
+  alias Maxo.Conf.State
+  alias Maxo.Conf.Table
 
   setup :new_conf
 
