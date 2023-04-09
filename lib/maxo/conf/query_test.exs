@@ -13,8 +13,10 @@ defmodule Maxo.Conf.QueryTest do
 
       auto_assert(
         %{
+          _type_: "table",
           columns: [
             %{
+              _type_: "column",
               comment: "",
               name: "id",
               nullable: false,
@@ -24,6 +26,7 @@ defmodule Maxo.Conf.QueryTest do
               type: "int"
             },
             %{
+              _type_: "column",
               comment: "",
               name: "name",
               nullable: false,
@@ -33,6 +36,7 @@ defmodule Maxo.Conf.QueryTest do
               type: "string"
             },
             %{
+              _type_: "column",
               comment: "",
               name: "email",
               nullable: false,
@@ -42,6 +46,7 @@ defmodule Maxo.Conf.QueryTest do
               type: "string"
             },
             %{
+              _type_: "column",
               comment: "",
               name: "password_hash",
               nullable: false,
@@ -54,6 +59,7 @@ defmodule Maxo.Conf.QueryTest do
           comment: "",
           indexes: [
             %{
+              _type_: "index",
               columns: ["email"],
               comment: "",
               name: "users_email_index",
@@ -64,6 +70,7 @@ defmodule Maxo.Conf.QueryTest do
           name: "users",
           relations: [
             %{
+              _type_: "relation",
               cardinality: "o2m",
               comment: "",
               dest_column: "id",
@@ -81,8 +88,10 @@ defmodule Maxo.Conf.QueryTest do
 
       auto_assert(
         %{
+          _type_: "table",
           columns: [
             %{
+              _type_: "column",
               comment: "",
               name: "id",
               nullable: false,
@@ -92,6 +101,7 @@ defmodule Maxo.Conf.QueryTest do
               type: "int"
             },
             %{
+              _type_: "column",
               comment: "",
               name: "users_id",
               nullable: false,
@@ -101,6 +111,7 @@ defmodule Maxo.Conf.QueryTest do
               type: "int"
             },
             %{
+              _type_: "column",
               comment: "",
               name: "teams_id",
               nullable: false,
@@ -113,6 +124,7 @@ defmodule Maxo.Conf.QueryTest do
           comment: "",
           indexes: [
             %{
+              _type_: "index",
               columns: ["teams_id"],
               comment: "",
               name: "memberships_teams_id_index",
@@ -120,6 +132,7 @@ defmodule Maxo.Conf.QueryTest do
               unique: false
             },
             %{
+              _type_: "index",
               columns: ["users_id"],
               comment: "",
               name: "memberships_users_id_index",
@@ -130,6 +143,7 @@ defmodule Maxo.Conf.QueryTest do
           name: "memberships",
           relations: [
             %{
+              _type_: "relation",
               cardinality: "o2m",
               comment: "",
               dest_column: "id",
@@ -138,6 +152,7 @@ defmodule Maxo.Conf.QueryTest do
               src_table: "memberships"
             },
             %{
+              _type_: "relation",
               cardinality: "o2m",
               comment: "",
               dest_column: "id",
@@ -157,6 +172,7 @@ defmodule Maxo.Conf.QueryTest do
 
       auto_assert(
         %{
+          _type_: "column",
           comment: "",
           name: "name",
           nullable: false,

@@ -37,9 +37,12 @@ defmodule Maxo.Conf.Value do
       iex> init([1, 2, 3])
       [1, 2, 3]
   """
-  def init(%{__struct__: _} = value) do
+  def init(%{__struct__: module} = value) do
+    type = Maxo.Naming.resource_name(module)
+
     Map.from_struct(value)
     |> Map.drop([:__meta__, :__struct__])
+    |> Map.put(:_type_, type)
   end
 
   # Initiate a Response based on a pre-existing Map or List.
