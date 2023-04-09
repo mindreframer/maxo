@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Maxo.AppTest do
   use ExUnit.Case, async: true
   alias Mix.Tasks.Maxo.App, as: MaxoApp
-  use Mneme, action: :accept, default_pattern: :last
+  use MnemeDefauls
   alias MaxoNew.Virtfs
 
   describe "unit_test_project" do

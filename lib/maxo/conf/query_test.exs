@@ -1,6 +1,6 @@
 defmodule Maxo.Conf.QueryTest do
   use ExUnit.Case, async: true
-  use Mneme, action: :accept, default_pattern: :last
+  use MnemeDefauls
   alias Maxo.Conf.Query
   alias Maxo.Conf.Util
   alias Maxo.Conf.{Context, Column, Table, State, Relation}

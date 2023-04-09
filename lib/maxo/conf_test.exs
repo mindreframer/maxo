@@ -1,6 +1,6 @@
 defmodule Maxo.ConfTest do
   use ExUnit.Case, async: true
-  use Mneme, action: :accept, default_pattern: :last
+  use MnemeDefauls
 
   alias Maxo.Conf
   alias Maxo.Conf.Util
