@@ -47,8 +47,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-mix-${{ env.cache-name }}-
             ${{ runner.os }}-mix-
-      - run: mix format --check-formatted
-      - run: rm -rf _build/ # temp action to clean state
-      - run: rm -rf deps/ # temp action to clean state
+      # - run: rm -rf _build/ # temp action to clean state
+      # - run: rm -rf deps/ # temp action to clean state
       - run: bin/setup
+      - run: mix format --check-formatted
       - run: bin/test
