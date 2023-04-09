@@ -30,7 +30,7 @@ defmodule Maxo.Conf.Backend do
 
     item =
       args
-      |> Map.merge(%{order: counter})
+      |> Map.merge(%{order: counter, table: table})
       |> Column.make!()
 
     name = Map.get(args, :name) || Map.fetch!(args, "name")

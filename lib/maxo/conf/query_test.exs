@@ -14,13 +14,22 @@ defmodule Maxo.Conf.QueryTest do
       auto_assert(
         %{
           columns: [
-            %{comment: "", name: "id", nullable: false, order: 1, primary: true, type: "int"},
+            %{
+              comment: "",
+              name: "id",
+              nullable: false,
+              order: 1,
+              primary: true,
+              table: "users",
+              type: "int"
+            },
             %{
               comment: "",
               name: "name",
               nullable: false,
               order: 2,
               primary: false,
+              table: "users",
               type: "string"
             },
             %{
@@ -29,6 +38,7 @@ defmodule Maxo.Conf.QueryTest do
               nullable: false,
               order: 3,
               primary: false,
+              table: "users",
               type: "string"
             },
             %{
@@ -37,6 +47,7 @@ defmodule Maxo.Conf.QueryTest do
               nullable: false,
               order: 4,
               primary: false,
+              table: "users",
               type: "string"
             }
           ],
@@ -71,13 +82,22 @@ defmodule Maxo.Conf.QueryTest do
       auto_assert(
         %{
           columns: [
-            %{comment: "", name: "id", nullable: false, order: 1, primary: true, type: "int"},
+            %{
+              comment: "",
+              name: "id",
+              nullable: false,
+              order: 1,
+              primary: true,
+              table: "memberships",
+              type: "int"
+            },
             %{
               comment: "",
               name: "users_id",
               nullable: false,
               order: 2,
               primary: false,
+              table: "memberships",
               type: "int"
             },
             %{
@@ -86,6 +106,7 @@ defmodule Maxo.Conf.QueryTest do
               nullable: false,
               order: 3,
               primary: false,
+              table: "memberships",
               type: "int"
             }
           ],
@@ -127,6 +148,29 @@ defmodule Maxo.Conf.QueryTest do
           ]
         } <- res
       )
+    end
+  end
+
+  describe "get_column" do
+    test "works", %{conf: conf} do
+      res = Query.get_column(conf, "teams", "name")
+
+      auto_assert(
+        %{
+          comment: "",
+          name: "name",
+          nullable: false,
+          order: 2,
+          primary: false,
+          table: "teams",
+          type: "string"
+        } <- res
+      )
+    end
+
+    test "nil for non-existing", %{conf: conf} do
+      res = Query.get_column(conf, "teams", "does-not-exist")
+      auto_assert(nil <- res)
     end
   end
 

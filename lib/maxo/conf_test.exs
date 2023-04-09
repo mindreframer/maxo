@@ -28,7 +28,15 @@ defmodule Maxo.ConfTest do
 
       auto_assert(
         %State{
-          columns: %{"users/id" => %Column{name: "id", order: 1, primary: true, type: "int"}},
+          columns: %{
+            "users/id" => %Column{
+              name: "id",
+              order: 1,
+              primary: true,
+              table: "users",
+              type: "int"
+            }
+          },
           private: %{
             columns_counter: %{"users" => 2},
             columns_lookup: %{"users" => %{"users/id" => true}},
@@ -49,7 +57,7 @@ defmodule Maxo.ConfTest do
 
       auto_assert(
         %State{
-          columns: %{"users/email" => %Column{name: "email", order: 1}},
+          columns: %{"users/email" => %Column{name: "email", order: 1, table: "users"}},
           private: %{
             columns_counter: %{"users" => 2},
             columns_lookup: %{"users" => %{"users/email" => true}},
@@ -75,11 +83,23 @@ defmodule Maxo.ConfTest do
       auto_assert(
         %State{
           columns: %{
-            "teams/id" => %Column{name: "id", order: 1, primary: true, type: "int"},
-            "teams/name" => %Column{name: "name", order: 2},
-            "teams/owner_id" => %Column{name: "owner_id", order: 3, type: "int"},
-            "users/email" => %Column{name: "email", order: 2},
-            "users/id" => %Column{name: "id", order: 1, primary: true, type: "int"}
+            "teams/id" => %Column{
+              name: "id",
+              order: 1,
+              primary: true,
+              table: "teams",
+              type: "int"
+            },
+            "teams/name" => %Column{name: "name", order: 2, table: "teams"},
+            "teams/owner_id" => %Column{name: "owner_id", order: 3, table: "teams", type: "int"},
+            "users/email" => %Column{name: "email", order: 2, table: "users"},
+            "users/id" => %Column{
+              name: "id",
+              order: 1,
+              primary: true,
+              table: "users",
+              type: "int"
+            }
           },
           private: %{
             columns_counter: %{"teams" => 4, "users" => 3},
@@ -118,9 +138,15 @@ defmodule Maxo.ConfTest do
       auto_assert(
         %State{
           columns: %{
-            "users/city" => %Column{name: "city", order: 3},
-            "users/email" => %Column{name: "email", order: 2},
-            "users/id" => %Column{name: "id", order: 1, primary: true, type: "int"}
+            "users/city" => %Column{name: "city", order: 3, table: "users"},
+            "users/email" => %Column{name: "email", order: 2, table: "users"},
+            "users/id" => %Column{
+              name: "id",
+              order: 1,
+              primary: true,
+              table: "users",
+              type: "int"
+            }
           },
           indexes: %{
             "users_email_city_index" => %Maxo.Conf.Index{
