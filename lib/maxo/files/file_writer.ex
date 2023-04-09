@@ -1,86 +1,105 @@
+defmodule Maxo.Files.State do
+  defstruct(lines: [], indent: 0, prefix: "")
+end
+
 defmodule Maxo.Files.FileWriter do
-  @moduledoc """
-  A small server to accumulate lines and dump them to a file quickly
-  """
+  alias Maxo.Files.State
+  use(GenServer)
+  @init_state %State{}
 
-  alias Maxo.Files.FileReader
-
-  @initial %{lines: [], indent: 0}
-
-  @name __MODULE__
-  use Agent
-  def start_link(), do: start_link(@initial)
-
-  def start_link(opts) do
-    Agent.start_link(fn -> opts end, name: @name)
+  def start_link() do
+    start_link(@init_state)
   end
 
-  def get() do
-    Agent.get(@name, fn %{lines: lines} -> lines |> Enum.reverse() end)
+  def start_link(state) do
+    GenServer.start_link(__MODULE__, state)
   end
 
-  def content() do
-    get() |> Enum.join("\n")
+  @impl true
+  def init(state = %State{}) do
+    {:ok, state}
   end
 
-  # noop for nil
-  def put(nil) do
-    nil
+  ## API
+
+  def put(pid, line) do
+    GenServer.call(pid, {:put, line})
   end
 
-  def put(line) do
-    Agent.update(@name, fn state ->
-      %{state | lines: [indented(line, state.indent) | state.lines]}
-    end)
+  def put(pid, line, indent) do
+    GenServer.call(pid, {:put, line, indent})
   end
 
-  def put(line, indent) when is_number(indent) do
-    Agent.update(@name, fn state ->
-      %{state | lines: [indented(line, indent) | state.lines]}
-    end)
+  def indent_up(pid, amount \\ 2) do
+    GenServer.call(pid, {:indent_up, amount})
   end
 
-  def get_indent() do
-    Agent.get(@name, fn %{indent: indent} -> indent end)
+  def indent_down(pid, amount \\ 2) do
+    GenServer.call(pid, {:indent_down, amount})
   end
 
-  def set_indent(indent) do
-    Agent.update(@name, fn state -> %{state | indent: indent} end)
+  def content(pid) do
+    GenServer.call(pid, {:content})
   end
 
-  def with_indent(indent, fun) do
-    orig = get_indent()
-    set_indent(orig + indent)
+  def get_indent(pid) do
+    GenServer.call(pid, {:get_indent})
+  end
+
+  def with_indent(pid, fun, amount \\ 2) do
+    indent_up(pid, amount)
     fun.()
-    set_indent(orig)
+    indent_down(pid, amount)
   end
 
-  # reading for files with scope to taxml2clips folder
-  def put_file(filename, commentchar \\ "#") do
-    put("#{commentchar} >>> FROM #{filename}")
-    put(FileReader.read!(filename))
-    put("#{commentchar} >>> DONE #{filename}")
+  # def dump(pid, path) do
+  # end
 
-    put(
-      "#{commentchar} >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
-    )
+  ## CALLBACKS
+
+  @impl true
+  def handle_call({:put, line}, _from, %State{} = state) do
+    handle_call({:put, line, state.indent}, nil, state)
   end
 
-  def dump(file) do
-    # assert the folder exists
-    File.mkdir_p(Path.dirname(file))
-    # empty the file first
-    File.write(file, "")
-
-    File.open(file, [:write, :utf8], fn file ->
-      Enum.each(get(), fn line ->
-        IO.puts(file, line)
-      end)
-    end)
+  @impl true
+  def handle_call({:put, line, indent}, _from, %State{} = state) do
+    state = %State{state | lines: [indented(line, indent) | state.lines]}
+    {:reply, :ok, state}
   end
 
-  def reset() do
-    Agent.update(@name, fn _content -> @initial end)
+  @impl true
+  def handle_call({:content}, _from, %State{} = state) do
+    content = state.lines |> Enum.reverse() |> Enum.join("\n")
+    {:reply, content, state}
+  end
+
+  @impl true
+  def handle_call({:reset}, _from, %State{} = _state) do
+    {:reply, :ok, @init_state}
+  end
+
+  @impl true
+  def handle_call({:set_indent, indent}, _from, %State{} = state) when is_number(indent) do
+    state = %State{state | indent: indent}
+    {:reply, :ok, state}
+  end
+
+  @impl true
+  def handle_call({:indent_up, amount}, _from, %State{} = state) when is_number(amount) do
+    state = %State{state | indent: state.indent + amount}
+    {:reply, :ok, state}
+  end
+
+  @impl true
+  def handle_call({:indent_down, amount}, _from, %State{} = state) when is_number(amount) do
+    state = %State{state | indent: max(state.indent - amount, 0)}
+    {:reply, :ok, state}
+  end
+
+  @impl true
+  def handle_call({:get_indent}, _from, %State{} = state) do
+    {:reply, state.indent, state}
   end
 
   defp indented(line, indent) do
