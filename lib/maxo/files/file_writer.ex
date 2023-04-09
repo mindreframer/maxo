@@ -19,6 +19,10 @@ defmodule Maxo.Files.FileWriter do
     Agent.get(@name, fn %{lines: lines} -> lines |> Enum.reverse() end)
   end
 
+  def content() do
+    get() |> Enum.join("\n")
+  end
+
   # noop for nil
   def put(nil) do
     nil
@@ -27,6 +31,12 @@ defmodule Maxo.Files.FileWriter do
   def put(line) do
     Agent.update(@name, fn state ->
       %{state | lines: [indented(line, state.indent) | state.lines]}
+    end)
+  end
+
+  def put(line, indent) when is_number(indent) do
+    Agent.update(@name, fn state ->
+      %{state | lines: [indented(line, indent) | state.lines]}
     end)
   end
 
@@ -46,11 +56,14 @@ defmodule Maxo.Files.FileWriter do
   end
 
   # reading for files with scope to taxml2clips folder
-  def put_file(filename) do
-    put("# >>> FROM #{filename}")
+  def put_file(filename, commentchar \\ "#") do
+    put("#{commentchar} >>> FROM #{filename}")
     put(FileReader.read!(filename))
-    put("# >>> DONE #{filename}")
-    put("# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
+    put("#{commentchar} >>> DONE #{filename}")
+
+    put(
+      "#{commentchar} >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
+    )
   end
 
   def dump(file) do

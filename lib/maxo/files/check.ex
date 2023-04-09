@@ -4,21 +4,34 @@ defmodule Maxo.Files.Check do
   def run do
     FW.start_link()
     FW.reset()
-    FW.put("## Hello here!")
     FW.put("defmodule Hey do")
+    FW.put("## Hello here!", 2)
+    FW.put(~s|@moduledoc "something about this module"|, 2)
+    FW.put("")
 
-    FW.with_indent(2, fn ->
-      FW.put("def hello do")
-
-      FW.with_indent(2, fn ->
-        FW.put(~s|IO.puts "42"|)
-      end)
-
-      FW.put("end")
-    end)
+    for fun <- ["hello1", "hello2", "hello3"] do
+      gen_func(fun)
+      FW.put("")
+    end
 
     FW.put("end")
+    FW.content() |> IO.puts()
+  end
 
-    FW.get()
+  defp inner_part do
+    for i <- 0..10 do
+      FW.with_indent(2, fn ->
+        FW.put(~s|IO.puts "#{i}"|)
+      end)
+    end
+  end
+
+  defp gen_func(fun) do
+    FW.with_indent(2, fn ->
+      FW.put(~s|@doc "some doc for #{fun}"|)
+      FW.put("def #{fun} do")
+      inner_part()
+      FW.put("end")
+    end)
   end
 end
