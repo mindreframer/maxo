@@ -25,7 +25,8 @@ defmodule Maxo.MixProject do
       {:virtfs, "~> 0.1.3"},
       {:construct, github: "ExpressApp/construct"},
       {:test_iex, github: "mindreframer/test_iex", only: [:test]},
-      {:mneme, "~> 0.2.7", only: [:test]}
+      # {:mneme, "~> 0.2.7", only: [:test]}
+      {:mneme, git: "https://github.com/zachallaun/mneme", branch: "force-update", only: [:test]}
     ]
   end
 end
