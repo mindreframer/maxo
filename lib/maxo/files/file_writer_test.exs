@@ -15,15 +15,7 @@ defmodule Maxo.Files.FileWriterTest do
         FW.indent_up(pid, 2)
         FW.put(pid, ~s|IO.puts "hello"|)
         FW.indent_down(pid, 2)
-
-        FW.with_indent(
-          pid,
-          fn ->
-            FW.put(pid, ~s|IO.puts "hello"|)
-          end,
-          2
-        )
-
+        FW.with_indent(pid, 2, fn -> FW.put(pid, ~s|IO.puts "hello"|) end)
         FW.put(pid, ~s|end|)
       end)
 
