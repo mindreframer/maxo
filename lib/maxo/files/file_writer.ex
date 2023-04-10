@@ -1,50 +1,41 @@
 defmodule Maxo.Files.State do
-  defstruct(lines: [], indent: 0, prefix: "")
+  defstruct(
+    lines: [],
+    indent: 0,
+    dumper: {__MODULE__, :dummy_dump}
+  )
+
+  def dummy_dump(path, content) do
+    IO.puts("********************************** DUMP ************************************")
+    IO.puts("dumping to #{path}")
+    IO.puts(content)
+
+    IO.puts(
+      "********************************** DUMP FINISHED ************************************"
+    )
+  end
 end
 
 defmodule Maxo.Files.FileWriter do
   alias Maxo.Files.State
-  use(GenServer)
+  use GenServer
   @init_state %State{}
 
-  def start_link() do
-    start_link(@init_state)
-  end
-
-  def start_link(state) do
-    GenServer.start_link(__MODULE__, state)
-  end
+  def start_link(), do: start_link(@init_state)
+  def start_link(state), do: GenServer.start_link(__MODULE__, state)
 
   @impl true
-  def init(state = %State{}) do
-    {:ok, state}
-  end
+  def init(state = %State{}), do: {:ok, state}
 
   ## API
-
-  def put(pid, line) do
-    GenServer.call(pid, {:put, line})
-  end
-
-  def put(pid, line, indent) do
-    GenServer.call(pid, {:put, line, indent})
-  end
-
-  def indent_up(pid, amount \\ 2) do
-    GenServer.call(pid, {:indent_up, amount})
-  end
-
-  def indent_down(pid, amount \\ 2) do
-    GenServer.call(pid, {:indent_down, amount})
-  end
-
-  def content(pid) do
-    GenServer.call(pid, {:content})
-  end
-
-  def get_indent(pid) do
-    GenServer.call(pid, {:get_indent})
-  end
+  def put(pid, line), do: call(pid, {:put, line})
+  def put(pid, line, indent), do: call(pid, {:put, line, indent})
+  def indent_up(pid, amount \\ 2), do: call(pid, {:indent_up, amount})
+  def indent_down(pid, amount \\ 2), do: call(pid, {:indent_down, amount})
+  def content(pid), do: call(pid, {:content})
+  def get_indent(pid), do: call(pid, {:get_indent})
+  def reset(pid), do: call(pid, {:reset})
+  def dump(pid, path), do: call(pid, {:dump, path})
 
   def with_indent(pid, fun, amount \\ 2) do
     indent_up(pid, amount)
@@ -52,8 +43,9 @@ defmodule Maxo.Files.FileWriter do
     indent_down(pid, amount)
   end
 
-  # def dump(pid, path) do
-  # end
+  defp call(pid, args) do
+    GenServer.call(pid, args)
+  end
 
   ## CALLBACKS
 
@@ -77,6 +69,19 @@ defmodule Maxo.Files.FileWriter do
   @impl true
   def handle_call({:reset}, _from, %State{} = _state) do
     {:reply, :ok, @init_state}
+  end
+
+  @impl true
+  def handle_call({:dump, path}, _from, %State{dumper: {mod, fun}} = state) do
+    res = apply(mod, fun, [path, to_content(state)])
+    {:reply, res, state}
+  end
+
+  @impl true
+  def handle_call({:dump, path}, _from, %State{dumper: dumper_fun} = state)
+      when is_function(dumper_fun, 2) do
+    res = dumper_fun.(path, to_content(state))
+    {:reply, res, state}
   end
 
   @impl true
@@ -104,5 +109,9 @@ defmodule Maxo.Files.FileWriter do
 
   defp indented(line, indent) do
     ~s|#{String.duplicate(" ", indent)}#{line}|
+  end
+
+  defp to_content(%State{} = state) do
+    state.lines |> Enum.reverse() |> Enum.join("\n")
   end
 end

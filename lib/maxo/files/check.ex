@@ -16,6 +16,7 @@ defmodule Maxo.Files.Check do
 
     FW.put(pid, "end")
     FW.content(pid) |> IO.puts()
+    FW.dump(pid, "/some/file.ex")
   end
 
   defp inner_part(pid) do
