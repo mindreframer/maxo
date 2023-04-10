@@ -1,6 +1,6 @@
 defmodule Maxo.Files.FileWriter do
+  use Maxo.FunServer
   alias Maxo.Files.State
-  use GenServer
   @init_state %State{}
 
   def start_link(), do: start_link(@init_state)
@@ -10,19 +10,19 @@ defmodule Maxo.Files.FileWriter do
   def init(state = %State{}), do: {:ok, state}
 
   ## API
-  def put(pid, line), do: call(pid, {:put, line})
-  def put(pid, line, indent), do: call(pid, {:put, line, indent})
-  def content(pid), do: call(pid, {:content})
-  def reset(pid), do: call(pid, {:reset})
+  def put(pid, line), do: sync(pid, handle_put(line))
+  def put(pid, line, indent), do: sync(pid, handle_put(line, indent))
+  def content(pid), do: sync(pid, handle_content())
+  def reset(pid), do: sync(pid, handle_reset())
 
   ## Dumping
-  def dump(pid, path), do: call(pid, {:dump, path})
-  def set_dumper(pid, dumper), do: call(pid, {:set_dumper, dumper})
+  def dump(pid, path), do: sync(pid, handle_dump(path))
+  def set_dumper(pid, dumper), do: sync(pid, handle_set_dumper(dumper))
 
   ## Indenting
-  def get_indent(pid), do: call(pid, {:get_indent})
-  def indent_up(pid, amount \\ 2), do: call(pid, {:indent_up, amount})
-  def indent_down(pid, amount \\ 2), do: call(pid, {:indent_down, amount})
+  def get_indent(pid), do: sync(pid, handle_get_indent())
+  def indent_up(pid, amount \\ 2), do: sync(pid, handle_indent_up(amount))
+  def indent_down(pid, amount \\ 2), do: sync(pid, handle_indent_down(amount))
   def indented(pid, fun), do: indented(pid, fun, 2)
   def indented(pid, amount, fun) when is_number(amount), do: indented(pid, fun, amount)
 
@@ -32,74 +32,66 @@ defmodule Maxo.Files.FileWriter do
     indent_down(pid, amount)
   end
 
-  ## CALLBACKS
-
-  @impl true
-  def handle_call({:put, line}, _from, %State{} = state) do
-    handle_call({:put, line, state.indent}, nil, state)
+  ### FunServer functions
+  defp handle_put(line) do
+    fn _, %State{} = state ->
+      {:reply, :ok, add_line(state, line, state.indent)}
+    end
   end
 
-  @impl true
-  def handle_call({:put, line, indent}, _from, %State{} = state) do
-    state = %State{state | lines: [indented_line(line, indent) | state.lines]}
-    {:reply, :ok, state}
+  defp handle_put(line, indent) do
+    fn _, %State{} = state ->
+      {:reply, :ok, add_line(state, line, indent)}
+    end
   end
 
-  @impl true
-  def handle_call({:content}, _from, %State{} = state) do
-    content = state.lines |> Enum.reverse() |> Enum.join("\n")
-    {:reply, content, state}
+  defp handle_get_indent() do
+    fn _, %State{} = state -> {:reply, state.indent, state} end
   end
 
-  @impl true
-  def handle_call({:reset}, _from, %State{} = _state) do
-    {:reply, :ok, @init_state}
+  defp handle_indent_up(amount) do
+    fn _, %State{} = state ->
+      state = put_indent(state, state.indent + amount)
+      {:reply, :ok, state}
+    end
   end
 
-  @impl true
-  def handle_call({:dump, path}, _from, %State{dumper: {mod, fun}} = state) do
-    res = apply(mod, fun, [path, to_content(state)])
-    {:reply, res, state}
+  defp handle_indent_down(amount) do
+    fn _, %State{} = state ->
+      state = put_indent(state, max(state.indent - amount, 0))
+      {:reply, :ok, state}
+    end
   end
 
-  @impl true
-  def handle_call({:dump, path}, _from, %State{dumper: dumper_fun} = state)
-      when is_function(dumper_fun, 2) do
-    res = dumper_fun.(path, to_content(state))
-    {:reply, res, state}
+  defp handle_content() do
+    fn _, %State{} = state -> {:reply, to_content(state), state} end
   end
 
-  @impl true
-  def handle_call({:set_indent, indent}, _from, %State{} = state) when is_number(indent) do
-    state = put_indent(state, indent)
-    {:reply, :ok, state}
+  defp handle_reset() do
+    fn _, %State{} -> {:reply, :ok, @init_state} end
   end
 
-  @impl true
-  def handle_call({:indent_up, amount}, _from, %State{} = state) when is_number(amount) do
-    state = put_indent(state, state.indent + amount)
-    {:reply, :ok, state}
+  defp handle_dump(path) do
+    fn _, %State{} = state -> {:reply, to_dump(state, path), state} end
   end
 
-  @impl true
-  def handle_call({:indent_down, amount}, _from, %State{} = state) when is_number(amount) do
-    state = put_indent(state, max(state.indent - amount, 0))
-    {:reply, :ok, state}
-  end
-
-  @impl true
-  def handle_call({:get_indent}, _from, %State{} = state) do
-    {:reply, state.indent, state}
+  defp handle_set_dumper(dumper) do
+    fn _, %State{} = state ->
+      state = %State{state | dumper: dumper}
+      {:reply, :ok, state}
+    end
   end
 
   ###
   ### Internal helpers
   ###
-  defp call(pid, args) do
-    GenServer.call(pid, args)
+  defp sync(server, handler), do: Maxo.FunServer.sync(server, handler)
+
+  defp add_line(%State{} = state, line, indent) do
+    %State{state | lines: [indented_line(line, indent) | state.lines]}
   end
 
-  defp put_indent(state, indent) do
+  defp put_indent(%State{} = state, indent) do
     %State{state | indent: indent}
   end
 
@@ -109,5 +101,13 @@ defmodule Maxo.Files.FileWriter do
 
   defp to_content(%State{} = state) do
     state.lines |> Enum.reverse() |> Enum.join("\n")
+  end
+
+  defp to_dump(%State{dumper: {mod, fun}} = state, path) do
+    apply(mod, fun, [path, to_content(state)])
+  end
+
+  defp to_dump(%State{dumper: {dumper}} = state, path) when is_function(dumper, 2) do
+    dumper.(path, to_content(state))
   end
 end

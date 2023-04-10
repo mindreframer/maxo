@@ -6,12 +6,14 @@ defmodule Maxo.Files.State do
   )
 
   def dummy_dump(path, content) do
-    IO.puts("********************************** DUMP ************************************")
+    IO.puts(banner("DUMP STARTED"))
     IO.puts("dumping to #{path}")
     IO.puts(content)
+    IO.puts(banner("DUMP FINISHED"))
+  end
 
-    IO.puts(
-      "********************************** DUMP FINISHED ************************************"
-    )
+  @chars "**********************************"
+  defp banner(line) do
+    @chars <> " #{line} " <> @chars
   end
 end
