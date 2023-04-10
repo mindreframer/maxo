@@ -1,0 +1,38 @@
+$ mix run bench/fun_server_bench.exs
+
+Operating System: macOS
+CPU Information: Apple M1
+Number of Available Cores: 8
+Available memory: 16 GB
+Elixir 1.14.2
+Erlang 25.2.3
+
+Benchmark suite executing with the following configuration:
+warmup: 2 s
+time: 10 s
+memory time: 2 s
+reduction time: 0 ns
+parallel: 1
+inputs: none specified
+Estimated total run time: 28 s
+
+Benchmarking funserver ...
+Benchmarking genserver ...
+
+Name                ips        average  deviation         median         99th %
+genserver      535.71 K        1.87 μs ±15417.32%        1.08 μs        2.04 μs
+funserver      509.45 K        1.96 μs ±20521.65%        1.08 μs        2.46 μs
+
+Comparison:
+genserver      535.71 K
+funserver      509.45 K - 1.05x slower +0.0962 μs
+
+Memory usage statistics:
+
+Name              average  deviation         median         99th %
+genserver        287.98 B     ±0.61%          288 B          288 B
+funserver        311.98 B     ±0.57%          312 B          312 B
+
+Comparison:
+genserver           288 B
+funserver        311.98 B - 1.08x memory usage +24.00 B

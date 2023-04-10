@@ -99,7 +99,7 @@ defmodule Maxo.Files.FileWriterFun do
   ###
   ### Internal helpers
   ###
-  defdelegate sync(server, handle), to: Maxo.FunServer, as: :sync
+  defp sync(server, handler), do: Maxo.FunServer.sync(server, handler)
 
   defp put_indent(%State{} = state, indent) do
     %State{state | indent: indent}
