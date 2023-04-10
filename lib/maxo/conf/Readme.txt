@@ -3,6 +3,7 @@
 Because we want to configure the full application in a single config, this needs more logic.
 
 
+```elixir
 ## API
 {:ok, conf} = Maxo.Conf.start_link()
 
@@ -41,3 +42,4 @@ Maxo.Conf.add_table(conf, "taggings")
 Maxo.Conf.add_column(conf, "taggings", %{name: "tag_id", type: "integer", nullable: false})
 Maxo.Conf.add_column(conf, "taggings", %{name: "taggable_id", type: "integer", nullable: false})
 Maxo.Conf.add_column(conf, "taggings", %{name: "taggable_type", type: "string", nullable: false})
+```

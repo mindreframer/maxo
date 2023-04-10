@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Maxo.AppTest do
   use ExUnit.Case, async: true
   alias Mix.Tasks.Maxo.App, as: MaxoApp
-  use Mneme, action: :accept, default_pattern: :last
+  use MnemeDefaults
   alias MaxoNew.Virtfs
 
   describe "unit_test_project" do
@@ -319,7 +319,7 @@ defmodule Mix.Tasks.Maxo.AppTest do
 
     test "with --gettext -> sets binding.gettext" do
       res = MaxoApp.unit_test_project("my_app --gettext=false")
-      auto_assert(remove_instable_values(res).binding |> Keyword.get(:gettext) == false)
+      auto_assert(false <- remove_instable_values(res).binding |> Keyword.get(:gettext))
 
       res = MaxoApp.unit_test_project("my_app --gettext")
       auto_assert(true <- remove_instable_values(res).binding |> Keyword.get(:gettext))

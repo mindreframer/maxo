@@ -7,6 +7,7 @@ end
 
 defmodule Maxo.Conf.Column do
   use Construct do
+    field(:table)
     field(:name)
     field(:comment, :string, default: "")
     field(:order, :integer)

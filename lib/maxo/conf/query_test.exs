@@ -1,9 +1,7 @@
 defmodule Maxo.Conf.QueryTest do
   use ExUnit.Case, async: true
-  use Mneme, action: :accept, default_pattern: :last
+  use MnemeDefaults
   alias Maxo.Conf.Query
-  alias Maxo.Conf.Util
-  alias Maxo.Conf.{Context, Column, Table, State, Relation}
 
   setup :setup_conf
 
@@ -13,36 +11,53 @@ defmodule Maxo.Conf.QueryTest do
 
       auto_assert(
         %{
+          _type_: "table",
           columns: [
-            %{comment: "", name: "id", nullable: false, order: 1, primary: true, type: "int"},
             %{
+              _type_: "column",
+              comment: "",
+              name: "id",
+              nullable: false,
+              order: 1,
+              primary: true,
+              table: "users",
+              type: "int"
+            },
+            %{
+              _type_: "column",
               comment: "",
               name: "name",
               nullable: false,
               order: 2,
               primary: false,
+              table: "users",
               type: "string"
             },
             %{
+              _type_: "column",
               comment: "",
               name: "email",
               nullable: false,
               order: 3,
               primary: false,
+              table: "users",
               type: "string"
             },
             %{
+              _type_: "column",
               comment: "",
               name: "password_hash",
               nullable: false,
               order: 4,
               primary: false,
+              table: "users",
               type: "string"
             }
           ],
           comment: "",
           indexes: [
             %{
+              _type_: "index",
               columns: ["email"],
               comment: "",
               name: "users_email_index",
@@ -53,6 +68,7 @@ defmodule Maxo.Conf.QueryTest do
           name: "users",
           relations: [
             %{
+              _type_: "relation",
               cardinality: "o2m",
               comment: "",
               dest_column: "id",
@@ -70,28 +86,43 @@ defmodule Maxo.Conf.QueryTest do
 
       auto_assert(
         %{
+          _type_: "table",
           columns: [
-            %{comment: "", name: "id", nullable: false, order: 1, primary: true, type: "int"},
             %{
+              _type_: "column",
+              comment: "",
+              name: "id",
+              nullable: false,
+              order: 1,
+              primary: true,
+              table: "memberships",
+              type: "int"
+            },
+            %{
+              _type_: "column",
               comment: "",
               name: "users_id",
               nullable: false,
               order: 2,
               primary: false,
+              table: "memberships",
               type: "int"
             },
             %{
+              _type_: "column",
               comment: "",
               name: "teams_id",
               nullable: false,
               order: 3,
               primary: false,
+              table: "memberships",
               type: "int"
             }
           ],
           comment: "",
           indexes: [
             %{
+              _type_: "index",
               columns: ["teams_id"],
               comment: "",
               name: "memberships_teams_id_index",
@@ -99,6 +130,7 @@ defmodule Maxo.Conf.QueryTest do
               unique: false
             },
             %{
+              _type_: "index",
               columns: ["users_id"],
               comment: "",
               name: "memberships_users_id_index",
@@ -109,6 +141,7 @@ defmodule Maxo.Conf.QueryTest do
           name: "memberships",
           relations: [
             %{
+              _type_: "relation",
               cardinality: "o2m",
               comment: "",
               dest_column: "id",
@@ -117,6 +150,7 @@ defmodule Maxo.Conf.QueryTest do
               src_table: "memberships"
             },
             %{
+              _type_: "relation",
               cardinality: "o2m",
               comment: "",
               dest_column: "id",
@@ -130,7 +164,31 @@ defmodule Maxo.Conf.QueryTest do
     end
   end
 
-  def setup_conf(_) do
+  describe "get_column" do
+    test "works", %{conf: conf} do
+      res = Query.get_column(conf, "teams", "name")
+
+      auto_assert(
+        %{
+          _type_: "column",
+          comment: "",
+          name: "name",
+          nullable: false,
+          order: 2,
+          primary: false,
+          table: "teams",
+          type: "string"
+        } <- res
+      )
+    end
+
+    test "nil for non-existing", %{conf: conf} do
+      res = Query.get_column(conf, "teams", "does-not-exist")
+      auto_assert(nil <- res)
+    end
+  end
+
+  defp setup_conf(_) do
     {:ok, conf} = Maxo.Conf.start_link()
 
     Maxo.Conf.add_context!(conf, "users")

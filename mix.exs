@@ -22,10 +22,12 @@ defmodule Maxo.MixProject do
 
   defp deps do
     [
-      {:virtfs, "~> 0.1.3"},
+      {:virtfs, "~> 0.1.4"},
       {:construct, github: "ExpressApp/construct"},
-      {:test_iex, github: "mindreframer/test_iex", only: [:test]},
-      {:mneme, "~> 0.2.7", only: [:test]}
+      {:maxo_test_iex, "~> 0.1", only: [:test]},
+      {:mneme, "~> 0.3", only: [:test]},
+      {:dialyxir, "~> 1.3", only: [:dev, :test], runtime: false},
+      {:benchee, "~> 1.1", only: [:test, :dev]}
     ]
   end
 end

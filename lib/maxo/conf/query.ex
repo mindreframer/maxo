@@ -29,7 +29,7 @@ defmodule Maxo.Conf.Query do
     conf = resolve_conf(conf)
 
     id = Naming.column(table, name)
-    MapValue.get(conf, "columns.#{id}")
+    MapValue.get(conf, "columns.#{id}") |> Value.init()
   end
 
   def columns_for_table(conf, table) do

@@ -1,6 +1,6 @@
 defmodule Maxo.ProjectTest do
   use ExUnit.Case, async: true
-  use Mneme, action: :accept, default_pattern: :last
+  use MnemeDefaults
 
   alias Maxo.Project
 
@@ -12,8 +12,10 @@ defmodule Maxo.ProjectTest do
           app_mod: MyApp,
           app_path: "my_app",
           core_ns: MyApp.Core,
-          core_path: "my_app/lib/my_app/core"
-        } <- Project.prepare("my_app")
+          core_path: "my_app/lib/my_app/core",
+          fs: pid
+        }
+        when is_pid(pid) <- Project.prepare("my_app")
       )
     end
   end

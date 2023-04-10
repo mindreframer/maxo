@@ -1,4 +1,4 @@
-defmodule ValueTest do
+defmodule Maxo.Conf.MapValueTest do
   use ExUnit.Case
 
   alias Maxo.Conf.MapValue

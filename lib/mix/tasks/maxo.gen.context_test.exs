@@ -1,6 +1,6 @@
 defmodule Mix.Tasks.Maxo.Gen.ContextTest do
   use ExUnit.Case
-  use Mneme, action: :accept, default_pattern: :last
+  use MnemeDefaults
 
   alias Mix.Tasks.Maxo.Gen
 

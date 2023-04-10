@@ -1,6 +1,6 @@
 defmodule Maxo.Generator do
   @moduledoc false
-  import Virtfs.Mix.Generator
+  # import Virtfs.Mix.Generator
   alias Maxo.Project
 
   @callback prepare_project(Project.t()) :: Project.t()
@@ -19,9 +19,9 @@ defmodule Maxo.Generator do
   defmacro __before_compile__(env) do
     # this generator's templates
     root = Path.join(Path.dirname(env.file), "templates")
-    IO.puts("ROOT: #{root}")
-    IO.puts("MOD: #{env.module}")
-    IO.puts("FILE: #{env.file}")
+    # IO.puts("ROOT: #{root}")
+    # IO.puts("MOD: #{env.module}")
+    # IO.puts("FILE: #{env.file}")
     # IO.puts "ENV: #{inspect(env)}"
 
     templates_ast =

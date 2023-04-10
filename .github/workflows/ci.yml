@@ -26,29 +26,29 @@ jobs:
           elixir-version: ${{matrix.elixir}}
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Cache deps
-        id: cache-deps
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-elixir-deps
-        with:
-          path: deps
-          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-mix-${{ env.cache-name }}-
-      - name: Cache compiled build
-        id: cache-build
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-compiled-build
-        with:
-          path: _build
-          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-mix-${{ env.cache-name }}-
-            ${{ runner.os }}-mix-
-      - run: mix format --check-formatted
-      - run: rm -rf _build/ # temp action to clean state
-      - run: rm -rf deps/ # temp action to clean state
+      # - name: Cache deps
+      #   id: cache-deps
+      #   uses: actions/cache@v3
+      #   env:
+      #     cache-name: cache-elixir-deps
+      #   with:
+      #     path: deps
+      #     key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-mix-${{ env.cache-name }}-
+      # - name: Cache compiled build
+      #   id: cache-build
+      #   uses: actions/cache@v3
+      #   env:
+      #     cache-name: cache-compiled-build
+      #   with:
+      #     path: _build
+      #     key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-mix-${{ env.cache-name }}-
+      #       ${{ runner.os }}-mix-
+      # - run: rm -rf _build/ # temp action to clean state
+      # - run: rm -rf deps/ # temp action to clean state
       - run: bin/setup
+      - run: mix format --check-formatted
       - run: bin/test
