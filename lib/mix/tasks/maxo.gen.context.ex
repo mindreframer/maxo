@@ -344,6 +344,7 @@ defmodule Mix.Tasks.Maxo.Gen.Context do
   end
 
   @doc false
+  @spec raise_with_help(msg :: binary) :: no_return()
   def raise_with_help(msg) do
     Mix.raise("""
     #{msg}

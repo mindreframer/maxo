@@ -301,8 +301,8 @@ defmodule Maxo.Conf.MapValue do
       {_field, :new} ->
         nil
 
-      {_scope, :array} ->
-        field
+        # {_scope, :array} ->
+        #   field
     end
   end
 
