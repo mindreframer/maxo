@@ -34,16 +34,14 @@ defmodule Maxo.Files.FileWriterFun do
 
   ### FunServer functions
   defp handle_put(line) do
-    fn _from, %State{} = state ->
-      state = %State{state | lines: [indented_line(line, state.indent) | state.lines]}
-      {:reply, :ok, state}
+    fn _, %State{} = state ->
+      {:reply, :ok, add_line(state, line, state.indent)}
     end
   end
 
   defp handle_put(line, indent) do
-    fn _from, %State{} = state ->
-      state = %State{state | lines: [indented_line(line, indent) | state.lines]}
-      {:reply, :ok, state}
+    fn _, %State{} = state ->
+      {:reply, :ok, add_line(state, line, indent)}
     end
   end
 
@@ -74,19 +72,7 @@ defmodule Maxo.Files.FileWriterFun do
   end
 
   defp handle_dump(path) do
-    fn _, %State{dumper: dumper} = state ->
-      res =
-        cond do
-          is_function(dumper, 2) ->
-            dumper.(path, to_content(state))
-
-          match?({_mod, _fun}, dumper) ->
-            {mod, fun} = dumper
-            apply(mod, fun, [path, to_content(state)])
-        end
-
-      {:reply, res, state}
-    end
+    fn _, %State{} = state -> {:reply, to_dump(state, path), state} end
   end
 
   defp handle_set_dumper(dumper) do
@@ -101,6 +87,10 @@ defmodule Maxo.Files.FileWriterFun do
   ###
   defp sync(server, handler), do: Maxo.FunServer.sync(server, handler)
 
+  defp add_line(%State{} = state, line, indent) do
+    %State{state | lines: [indented_line(line, indent) | state.lines]}
+  end
+
   defp put_indent(%State{} = state, indent) do
     %State{state | indent: indent}
   end
@@ -111,5 +101,13 @@ defmodule Maxo.Files.FileWriterFun do
 
   defp to_content(%State{} = state) do
     state.lines |> Enum.reverse() |> Enum.join("\n")
+  end
+
+  defp to_dump(%State{dumper: {mod, fun}} = state, path) do
+    apply(mod, fun, [path, to_content(state)])
+  end
+
+  defp to_dump(%State{dumper: {dumper}} = state, path) when is_function(dumper, 2) do
+    dumper.(path, to_content(state))
   end
 end
