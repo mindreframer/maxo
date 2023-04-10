@@ -21,14 +21,14 @@ defmodule Maxo.Files.Check do
 
   defp inner_part(pid) do
     for i <- 0..10 do
-      FW.with_indent(pid, fn ->
+      FW.indented(pid, fn ->
         FW.put(pid, ~s|IO.puts "#{i}"|)
       end)
     end
   end
 
   defp gen_func(pid, fun) do
-    FW.with_indent(pid, fn ->
+    FW.indented(pid, fn ->
       FW.put(pid, ~s|@doc "some doc for #{fun}"|)
       FW.put(pid, "def #{fun} do")
       inner_part(pid)

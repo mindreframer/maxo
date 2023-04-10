@@ -41,10 +41,10 @@ defmodule Maxo.Files.FileWriter do
   def get_indent(pid), do: call(pid, {:get_indent})
   def indent_up(pid, amount \\ 2), do: call(pid, {:indent_up, amount})
   def indent_down(pid, amount \\ 2), do: call(pid, {:indent_down, amount})
-  def with_indent(pid, fun), do: with_indent(pid, fun, 2)
-  def with_indent(pid, amount, fun) when is_number(amount), do: with_indent(pid, fun, amount)
+  def indented(pid, fun), do: indented(pid, fun, 2)
+  def indented(pid, amount, fun) when is_number(amount), do: indented(pid, fun, amount)
 
-  def with_indent(pid, fun, amount) do
+  def indented(pid, fun, amount) do
     indent_up(pid, amount)
     fun.()
     indent_down(pid, amount)
@@ -59,7 +59,7 @@ defmodule Maxo.Files.FileWriter do
 
   @impl true
   def handle_call({:put, line, indent}, _from, %State{} = state) do
-    state = %State{state | lines: [indented(line, indent) | state.lines]}
+    state = %State{state | lines: [indented_line(line, indent) | state.lines]}
     {:reply, :ok, state}
   end
 
@@ -121,7 +121,7 @@ defmodule Maxo.Files.FileWriter do
     %State{state | indent: indent}
   end
 
-  defp indented(line, indent) do
+  defp indented_line(line, indent) do
     ~s|#{String.duplicate(" ", indent)}#{line}|
   end
 
