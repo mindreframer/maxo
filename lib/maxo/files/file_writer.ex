@@ -35,13 +35,13 @@ defmodule Maxo.Files.FileWriter do
   ### FunServer functions
   defp handle_put(line) do
     fn _, %State{} = state ->
-      {:reply, :ok, add_line(state, line, state.indent)}
+      {:reply, :ok, _add_line(state, line, state.indent)}
     end
   end
 
   defp handle_put(line, indent) do
     fn _, %State{} = state ->
-      {:reply, :ok, add_line(state, line, indent)}
+      {:reply, :ok, _add_line(state, line, indent)}
     end
   end
 
@@ -51,20 +51,20 @@ defmodule Maxo.Files.FileWriter do
 
   defp handle_indent_up(amount) do
     fn _, %State{} = state ->
-      state = put_indent(state, state.indent + amount)
+      state = _put_indent(state, state.indent + amount)
       {:reply, :ok, state}
     end
   end
 
   defp handle_indent_down(amount) do
     fn _, %State{} = state ->
-      state = put_indent(state, max(state.indent - amount, 0))
+      state = _put_indent(state, max(state.indent - amount, 0))
       {:reply, :ok, state}
     end
   end
 
   defp handle_content() do
-    fn _, %State{} = state -> {:reply, to_content(state), state} end
+    fn _, %State{} = state -> {:reply, _to_content(state), state} end
   end
 
   defp handle_reset() do
@@ -72,7 +72,7 @@ defmodule Maxo.Files.FileWriter do
   end
 
   defp handle_dump(path) do
-    fn _, %State{} = state -> {:reply, to_dump(state, path), state} end
+    fn _, %State{} = state -> {:reply, _to_dump(state, path), state} end
   end
 
   defp handle_set_dumper(dumper) do
@@ -87,27 +87,27 @@ defmodule Maxo.Files.FileWriter do
   ###
   defp sync(server, handler), do: Maxo.FunServer.sync(server, handler)
 
-  defp add_line(%State{} = state, line, indent) do
-    %State{state | lines: [indented_line(line, indent) | state.lines]}
+  defp _add_line(%State{} = state, line, indent) do
+    %State{state | lines: [_indented_line(line, indent) | state.lines]}
   end
 
-  defp put_indent(%State{} = state, indent) do
+  defp _put_indent(%State{} = state, indent) do
     %State{state | indent: indent}
   end
 
-  defp indented_line(line, indent) do
+  defp _indented_line(line, indent) do
     ~s|#{String.duplicate(" ", indent)}#{line}|
   end
 
-  defp to_content(%State{} = state) do
+  defp _to_content(%State{} = state) do
     state.lines |> Enum.reverse() |> Enum.join("\n")
   end
 
-  defp to_dump(%State{dumper: {mod, fun}} = state, path) do
-    apply(mod, fun, [path, to_content(state)])
+  defp _to_dump(%State{dumper: {mod, fun}} = state, path) do
+    apply(mod, fun, [path, _to_content(state)])
   end
 
-  defp to_dump(%State{dumper: {dumper}} = state, path) when is_function(dumper, 2) do
-    dumper.(path, to_content(state))
+  defp _to_dump(%State{dumper: {dumper}} = state, path) when is_function(dumper, 2) do
+    dumper.(path, _to_content(state))
   end
 end
